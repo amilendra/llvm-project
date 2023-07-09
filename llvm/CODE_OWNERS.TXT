@@ -263,3 +263,7 @@ D: C-SKY backend (lib/Target/CSKY/*)
 N: Ilia Diachkov
 E: ilia.diachkov@gmail.com
 D: SPIR-V backend (lib/Target/SPIRV/*)
+
+N: Amilendra Kodithuwakku
+E: amilendra.kodithuwakku@gmail.com
+D: Cpu0 backend (lib/Target/Cpu0/*)

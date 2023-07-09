@@ -203,6 +203,11 @@ SPIR-V
 
 * `SPIR-V documentation <https://www.khronos.org/registry/SPIR-V/>`_
 
+Cpu0
+====
+
+* `Cpu0 documentation <https://jonathan2251.github.io/lbd/llvmstructure.html>`_
+
 Miscellaneous Resources
 =======================
 

@@ -1005,6 +1005,17 @@ TEST(TripleTest, ParsedIDs) {
   EXPECT_EQ(Triple::aarch64, T.getArch());
   EXPECT_EQ(Triple::PC, T.getVendor());
   EXPECT_EQ(Triple::Serenity, T.getOS());
+
+  T = Triple("cpu0-unknown-unknown");
+  EXPECT_EQ(Triple::cpu0, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::UnknownOS, T.getOS());
+  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
+
+  T = Triple("cpu0el-unknown-linux");
+  EXPECT_EQ(Triple::cpu0el, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::Linux, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
   T = Triple("huh");
@@ -1397,6 +1408,18 @@ TEST(TripleTest, BitWidthChecks) {
   EXPECT_FALSE(T.isArch16Bit());
   EXPECT_TRUE(T.isArch32Bit());
   EXPECT_FALSE(T.isArch64Bit());
+
+  T.setArch(Triple::cpu0);
+  EXPECT_FALSE(T.isArch16Bit());
+  EXPECT_TRUE(T.isArch32Bit());
+  EXPECT_FALSE(T.isArch64Bit());
+  EXPECT_TRUE(T.isCpu0());
+
+  T.setArch(Triple::cpu0el);
+  EXPECT_FALSE(T.isArch16Bit());
+  EXPECT_TRUE(T.isArch32Bit());
+  EXPECT_FALSE(T.isArch64Bit());
+  EXPECT_TRUE(T.isCpu0());
 }
 
 TEST(TripleTest, BitWidthArchVariants) {
@@ -1544,6 +1567,12 @@ TEST(TripleTest, BitWidthArchVariants) {
   EXPECT_EQ(Triple::csky, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::UnknownArch, T.get64BitArchVariant().getArch());
 
+  T.setArch(Triple::cpu0);
+  EXPECT_EQ(Triple::cpu0, T.get32BitArchVariant().getArch());
+
+  T.setArch(Triple::cpu0el);
+  EXPECT_EQ(Triple::cpu0el, T.get32BitArchVariant().getArch());
+
   T.setArch(Triple::loongarch32);
   EXPECT_EQ(Triple::loongarch32, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::loongarch64, T.get64BitArchVariant().getArch());
@@ -1641,6 +1670,16 @@ TEST(TripleTest, EndianArchVariants) {
   T.setArch(Triple::bpfel);
   EXPECT_EQ(Triple::bpfeb, T.getBigEndianArchVariant().getArch());
   EXPECT_EQ(Triple::bpfel, T.getLittleEndianArchVariant().getArch());
+
+  T.setArch(Triple::cpu0);
+  EXPECT_FALSE(T.isLittleEndian());
+  EXPECT_EQ(Triple::cpu0, T.getBigEndianArchVariant().getArch());
+  EXPECT_EQ(Triple::cpu0el, T.getLittleEndianArchVariant().getArch());
+
+  T.setArch(Triple::cpu0el);
+  EXPECT_TRUE(T.isLittleEndian());
+  EXPECT_EQ(Triple::cpu0, T.getBigEndianArchVariant().getArch());
+  EXPECT_EQ(Triple::cpu0el, T.getLittleEndianArchVariant().getArch());
 
   T.setArch(Triple::mips64);
   EXPECT_EQ(Triple::mips64, T.getBigEndianArchVariant().getArch());
@@ -2037,6 +2076,9 @@ TEST(TripleTest, FileFormat) {
 
   EXPECT_EQ(Triple::ELF, Triple("csky-unknown-unknown").getObjectFormat());
   EXPECT_EQ(Triple::ELF, Triple("csky-unknown-linux").getObjectFormat());
+
+  EXPECT_EQ(Triple::ELF, Triple("cpu0-unknown-unknown").getObjectFormat());
+  EXPECT_EQ(Triple::ELF, Triple("cpu0el-unknown-linux").getObjectFormat());
 
   EXPECT_EQ(Triple::SPIRV, Triple("spirv-unknown-unknown").getObjectFormat());
   EXPECT_EQ(Triple::SPIRV, Triple("spirv32-unknown-unknown").getObjectFormat());
