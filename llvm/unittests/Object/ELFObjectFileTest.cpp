@@ -232,6 +232,18 @@ TEST(ELFObjectFileTest, MachineTestForBPF) {
     checkFormatAndArch(Data, Formats[Idx], Archs[Idx]);
 }
 
+TEST(ELFObjectFileTest, MachineTestForCpu0) {
+  std::array<StringRef, 4> Formats = {"cpu0", "cpu0", "elf64-unknown",
+                                      "elf64-unknown"};
+  std::array<Triple::ArchType, 4> Archs = {
+      Triple::cpu0el, Triple::cpu0, Triple::UnknownArch, Triple::UnknownArch};
+  size_t I = 0;
+  for (const DataForTest &D : generateData(ELF::EM_CPU0)) {
+    checkFormatAndArch(D, Formats[I], Archs[I]);
+    ++I;
+  }
+}
+
 TEST(ELFObjectFileTest, MachineTestForAVR) {
   std::array<StringRef, 4> Formats = {"elf32-avr", "elf32-avr", "elf64-unknown",
                                       "elf64-unknown"};
