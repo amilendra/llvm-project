@@ -9,7 +9,26 @@
 // This file provides Cpu0 specific target descriptions.
 //
 //===----------------------------------------------------------------------===//
+#include "Cpu0MCTargetDesc.h"
+#include "TargetInfo/Cpu0TargetInfo.h"
 
-#include "llvm/Support/Compiler.h"
+#include "llvm/MC/MCInstrInfo.h"
+#include "llvm/MC/MCRegisterInfo.h"
+#include "llvm/MC/TargetRegistry.h"
 
-extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0TargetMC() {}
+#define GET_REGINFO_MC_DESC
+#include "Cpu0GenRegisterInfo.inc"
+
+using namespace llvm;
+
+static MCRegisterInfo *createCpu0MCRegisterInfo(const Triple &TT) {
+  MCRegisterInfo *Info = new MCRegisterInfo();
+  InitCpu0MCRegisterInfo(Info, Cpu0::R5);
+  return Info;
+}
+
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0TargetMC() {
+  for (Target *T : {&getTheCpu0LETarget(), &getTheCpu0BETarget()}) {
+    TargetRegistry::RegisterMCRegInfo(*T, createCpu0MCRegisterInfo);
+  }
+}
