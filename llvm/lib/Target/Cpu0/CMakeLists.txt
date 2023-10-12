@@ -3,6 +3,7 @@ add_llvm_component_group(Cpu0)
 set(LLVM_TARGET_DEFINITIONS Cpu0.td)
 
 tablegen(LLVM Cpu0GenRegisterInfo.inc -gen-register-info)
+tablegen(LLVM Cpu0GenInstrInfo.inc -gen-instr-info)
 
 add_public_tablegen_target(Cpu0CommonTableGen)
 

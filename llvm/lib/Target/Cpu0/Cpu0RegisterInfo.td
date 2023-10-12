@@ -61,6 +61,8 @@ def LO : Cpu0OtherReg<4, "LO">;
 //===----------------------------------------------------------------------===//
 //@ Register Classes
 //===----------------------------------------------------------------------===//
+def Cpu0GPR   : RegisterClass<"Cpu0", [i32], 32, (add R0, R1, R2, R3, R4, R5, R6)>;
+
 //@ Hi/Lo Registers class
 def HILO   : RegisterClass<"Cpu0", [i32], 32, (add HI, LO)>;
 

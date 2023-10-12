@@ -23,4 +23,8 @@ class MCRegisterInfo;
 #define GET_REGINFO_ENUM
 #include "Cpu0GenRegisterInfo.inc"
 
+// Defines symbolic names for the Cpu0 instructions.
+#define GET_INSTRINFO_ENUM
+#include "Cpu0GenInstrInfo.inc"
+
 #endif // LLVM_LIB_TARGET_CPU0_MCTARGETDESC_CPU0MCTARGETDESC_H

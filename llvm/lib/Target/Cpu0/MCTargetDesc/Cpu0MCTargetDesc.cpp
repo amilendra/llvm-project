@@ -16,6 +16,9 @@
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/MC/TargetRegistry.h"
 
+#define GET_INSTRINFO_MC_DESC
+#include "Cpu0GenInstrInfo.inc"
+
 #define GET_REGINFO_MC_DESC
 #include "Cpu0GenRegisterInfo.inc"
 
@@ -27,8 +30,15 @@ static MCRegisterInfo *createCpu0MCRegisterInfo(const Triple &TT) {
   return Info;
 }
 
+static MCInstrInfo *createCpu0MCInstrInfo() {
+  MCInstrInfo *Info = new MCInstrInfo();
+  InitCpu0MCInstrInfo(Info);
+  return Info;
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0TargetMC() {
   for (Target *T : {&getTheCpu0LETarget(), &getTheCpu0BETarget()}) {
     TargetRegistry::RegisterMCRegInfo(*T, createCpu0MCRegisterInfo);
+    TargetRegistry::RegisterMCInstrInfo(*T, createCpu0MCInstrInfo);
   }
 }
