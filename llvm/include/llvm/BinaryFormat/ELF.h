@@ -320,6 +320,7 @@ enum {
   EM_VE = 251,            // NEC SX-Aurora VE
   EM_CSKY = 252,          // C-SKY 32-bit processor
   EM_LOONGARCH = 258,     // LoongArch
+  EM_RISCV0 = 999,        // RISC-V0
 };
 
 // Object file classes.
@@ -686,6 +687,22 @@ enum {
   // Symbol may follow different calling convention than the standard calling
   // convention.
   STO_RISCV_VARIANT_CC = 0x80
+};
+
+// RISCV0 Specific e_flags
+enum : unsigned {
+  EF_RISCV0_RVC = 0x0001,
+  EF_RISCV0_FLOAT_ABI = 0x0006,
+  EF_RISCV0_FLOAT_ABI_SOFT = 0x0000,
+  EF_RISCV0_FLOAT_ABI_SINGLE = 0x0002,
+  EF_RISCV0_FLOAT_ABI_DOUBLE = 0x0004,
+  EF_RISCV0_FLOAT_ABI_QUAD = 0x0006,
+  EF_RISCV0_RVE = 0x0008
+};
+
+// ELF Relocation types for RISC-V0
+enum {
+#include "ELFRelocs/RISCV0.def"
 };
 
 // ELF Relocation types for S390/zSeries

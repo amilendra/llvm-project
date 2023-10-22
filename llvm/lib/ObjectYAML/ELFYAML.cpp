@@ -350,6 +350,7 @@ void ScalarEnumerationTraits<ELFYAML::ELF_EM>::enumeration(
   ECase(EM_56800EX);
   ECase(EM_AMDGPU);
   ECase(EM_RISCV);
+  ECase(EM_RISCV0);
   ECase(EM_LANAI);
   ECase(EM_BPF);
   ECase(EM_VE);
@@ -548,6 +549,14 @@ void ScalarBitSetTraits<ELFYAML::ELF_EF>::bitset(IO &IO,
     BCase(EF_XTENSA_XT_INSN);
     BCaseMask(EF_XTENSA_MACH_NONE, EF_XTENSA_MACH);
     BCase(EF_XTENSA_XT_LIT);
+    break;
+  case ELF::EM_RISCV0:
+    BCase(EF_RISCV0_RVC);
+    BCaseMask(EF_RISCV0_FLOAT_ABI_SOFT, EF_RISCV0_FLOAT_ABI);
+    BCaseMask(EF_RISCV0_FLOAT_ABI_SINGLE, EF_RISCV0_FLOAT_ABI);
+    BCaseMask(EF_RISCV0_FLOAT_ABI_DOUBLE, EF_RISCV0_FLOAT_ABI);
+    BCaseMask(EF_RISCV0_FLOAT_ABI_QUAD, EF_RISCV0_FLOAT_ABI);
+    BCase(EF_RISCV0_RVE);
     break;
   case ELF::EM_AMDGPU:
     BCaseMask(EF_AMDGPU_MACH_NONE, EF_AMDGPU_MACH);
@@ -887,6 +896,9 @@ void ScalarEnumerationTraits<ELFYAML::ELF_REL>::enumeration(
     break;
   case ELF::EM_RISCV:
 #include "llvm/BinaryFormat/ELFRelocs/RISCV.def"
+    break;
+  case ELF::EM_RISCV0:
+#include "llvm/BinaryFormat/ELFRelocs/RISCV0.def"
     break;
   case ELF::EM_LANAI:
 #include "llvm/BinaryFormat/ELFRelocs/Lanai.def"
