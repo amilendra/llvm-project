@@ -1003,6 +1003,24 @@ TEST(TripleTest, ParsedIDs) {
   EXPECT_EQ(Triple::LiteOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
+  T = Triple("riscv032-unknown-unknown");
+  EXPECT_EQ(Triple::riscv032, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::UnknownOS, T.getOS());
+  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
+
+  T = Triple("riscv064-unknown-linux");
+  EXPECT_EQ(Triple::riscv064, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::Linux, T.getOS());
+  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
+
+  T = Triple("riscv064-unknown-freebsd");
+  EXPECT_EQ(Triple::riscv064, T.getArch());
+  EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
+  EXPECT_EQ(Triple::FreeBSD, T.getOS());
+  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
+
   T = Triple("huh");
   EXPECT_EQ(Triple::UnknownArch, T.getArch());
 }
@@ -1377,6 +1395,16 @@ TEST(TripleTest, BitWidthPredicates) {
   EXPECT_FALSE(T.isArch16Bit());
   EXPECT_TRUE(T.isArch32Bit());
   EXPECT_FALSE(T.isArch64Bit());
+
+  T.setArch(Triple::riscv032);
+  EXPECT_FALSE(T.isArch16Bit());
+  EXPECT_TRUE(T.isArch32Bit());
+  EXPECT_FALSE(T.isArch64Bit());
+
+  T.setArch(Triple::riscv064);
+  EXPECT_FALSE(T.isArch16Bit());
+  EXPECT_FALSE(T.isArch32Bit());
+  EXPECT_TRUE(T.isArch64Bit());
 }
 
 TEST(TripleTest, BitWidthArchVariants) {
@@ -1523,6 +1551,14 @@ TEST(TripleTest, BitWidthArchVariants) {
   T.setArch(Triple::csky);
   EXPECT_EQ(Triple::csky, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::UnknownArch, T.get64BitArchVariant().getArch());
+
+  T.setArch(Triple::riscv032);
+  EXPECT_EQ(Triple::riscv032, T.get32BitArchVariant().getArch());
+  EXPECT_EQ(Triple::riscv064, T.get64BitArchVariant().getArch());
+
+  T.setArch(Triple::riscv064);
+  EXPECT_EQ(Triple::riscv032, T.get32BitArchVariant().getArch());
+  EXPECT_EQ(Triple::riscv064, T.get64BitArchVariant().getArch());
 
   T.setArch(Triple::loongarch32);
   EXPECT_EQ(Triple::loongarch32, T.get32BitArchVariant().getArch());
@@ -1981,6 +2017,9 @@ TEST(TripleTest, FileFormat) {
 
   EXPECT_EQ(Triple::ELF, Triple("csky-unknown-unknown").getObjectFormat());
   EXPECT_EQ(Triple::ELF, Triple("csky-unknown-linux").getObjectFormat());
+
+  EXPECT_EQ(Triple::ELF, Triple("riscv032-unknown-unknown").getObjectFormat());
+  EXPECT_EQ(Triple::ELF, Triple("riscv064-unknown-linux").getObjectFormat());
 
   EXPECT_EQ(Triple::SPIRV, Triple("spirv-unknown-unknown").getObjectFormat());
   EXPECT_EQ(Triple::SPIRV, Triple("spirv32-unknown-unknown").getObjectFormat());

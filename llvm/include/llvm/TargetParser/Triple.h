@@ -55,6 +55,8 @@ public:
     avr,            // AVR: Atmel AVR microcontroller
     bpfel,          // eBPF or extended BPF or 64-bit BPF (little endian)
     bpfeb,          // eBPF or extended BPF or 64-bit BPF (big endian)
+    riscv032,       // RISCV0 (32-bit little endian)
+    riscv064,       // RISCV0 (64-bit little endian)
     csky,           // CSKY: csky
     dxil,           // DXIL 32-bit DirectX bytecode
     hexagon,        // Hexagon: hexagon
@@ -877,6 +879,11 @@ public:
                    getEnvironment() == Triple::GNUILP32
                ? PointerWidth == 32
                : PointerWidth == 64;
+  }
+
+  /// Tests whether the target is RISCV0 (32-bit and 64-bit).
+  bool isRISCV0() const {
+    return getArch() == Triple::riscv032 || getArch() == Triple::riscv064;
   }
 
   /// Tests whether the target is 32-bit LoongArch.
