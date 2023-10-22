@@ -14,6 +14,7 @@
 #ifndef LLVM_LIB_TARGET_RISCV0_RISCV0TARGETMACHINE_H
 #define LLVM_LIB_TARGET_RISCV0_RISCV0TARGETMACHINE_H
 
+#include "MCTargetDesc/RISCV0MCTargetDesc.h"
 #include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetMachine.h"
@@ -35,8 +36,6 @@ public:
     return TLOF.get();
   }
 };
-Target &getTheRISCV032Target();
-Target &getTheRISCV064Target();
 } // namespace llvm
 
 #endif

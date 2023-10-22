@@ -21,14 +21,9 @@ Target &getTheRISCV064Target() {
 }
 } // namespace llvm
 
-extern "C" void LLVMInitializeRISCV0TargetInfo() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeRISCV0TargetInfo() {
   RegisterTarget<Triple::riscv032> X(getTheRISCV032Target(), "riscv032",
                                      "32-bit RISC-V0", "RISCV0");
   RegisterTarget<Triple::riscv064> Y(getTheRISCV064Target(), "riscv064",
                                      "64-bit RISC-V0", "RISCV0");
 }
-
-// FIXME: Temporary stub - this function must be defined for linking
-// to succeed and will be called unconditionally by llc, so must be a no-op.
-// Remove once this function is properly implemented.
-extern "C" void LLVMInitializeRISCV0TargetMC() {}
