@@ -8,6 +8,7 @@ add_llvm_component_library(LLVMRISCV0Desc
   LINK_COMPONENTS
   MC
   RISCV0Info
+  RISCV0AsmPrinter
   Support
   TargetParser
 

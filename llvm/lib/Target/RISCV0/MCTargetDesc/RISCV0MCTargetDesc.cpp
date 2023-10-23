@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "RISCV0MCTargetDesc.h"
+#include "InstPrinter/RISCV0InstPrinter.h"
 #include "RISCV0MCAsmInfo.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/MC/MCAsmInfo.h"
@@ -48,6 +49,14 @@ static MCAsmInfo *createRISCV0MCAsmInfo(const MCRegisterInfo &MRI,
   return new RISCV0MCAsmInfo(TT);
 }
 
+static MCInstPrinter *createRISCV0MCInstPrinter(const Triple &T,
+                                                unsigned SyntaxVariant,
+                                                const MCAsmInfo &MAI,
+                                                const MCInstrInfo &MII,
+                                                const MCRegisterInfo &MRI) {
+  return new RISCV0InstPrinter(MAI, MII, MRI);
+}
+
 extern "C" void LLVMInitializeRISCV0TargetMC() {
   for (Target *T : {&getTheRISCV032Target(), &getTheRISCV064Target()}) {
     TargetRegistry::RegisterMCAsmInfo(*T, createRISCV0MCAsmInfo);
@@ -55,5 +64,6 @@ extern "C" void LLVMInitializeRISCV0TargetMC() {
     TargetRegistry::RegisterMCRegInfo(*T, createRISCV0MCRegisterInfo);
     TargetRegistry::RegisterMCAsmBackend(*T, createRISCV0AsmBackend);
     TargetRegistry::RegisterMCCodeEmitter(*T, createRISCV0MCCodeEmitter);
+    TargetRegistry::RegisterMCInstPrinter(*T, createRISCV0MCInstPrinter);
   }
 }
