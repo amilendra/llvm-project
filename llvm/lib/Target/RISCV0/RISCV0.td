@@ -27,8 +27,6 @@ def RV32         : HwMode<"-64bit", []>;
 include "RISCV0RegisterInfo.td"
 include "RISCV0InstrInfo.td"
 
-def RISCV0InstrInfo : InstrInfo;
-
 //===----------------------------------------------------------------------===//
 // RISC-V0 processors supported.
 //===----------------------------------------------------------------------===//
@@ -41,6 +39,13 @@ def : ProcessorModel<"generic-rv64", NoSchedModel, [Feature64Bit]>;
 // Define the RISC-V0 target.
 //===----------------------------------------------------------------------===//
 
+def RISCV0InstrInfo : InstrInfo;
+
+def RISCV0AsmParser : AsmParser {
+  let ShouldEmitMatchRegisterAltName = 1;
+}
+
 def RISCV0 : Target {
   let InstructionSet = RISCV0InstrInfo;
+  let AssemblyParsers = [RISCV0AsmParser];
 }
