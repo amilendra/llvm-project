@@ -56,4 +56,7 @@ std::unique_ptr<MCObjectTargetWriter> createRISCV0ELFObjectWriter(uint8_t OSABI,
 #define GET_INSTRINFO_ENUM
 #include "RISCV0GenInstrInfo.inc"
 
+#define GET_SUBTARGETINFO_ENUM
+#include "RISCV0GenSubtargetInfo.inc"
+
 #endif

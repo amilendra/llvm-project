@@ -7,11 +7,13 @@ tablegen(LLVM RISCV0GenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM RISCV0GenMCCodeEmitter.inc -gen-emitter)
 tablegen(LLVM RISCV0GenAsmMatcher.inc -gen-asm-matcher)
 tablegen(LLVM RISCV0GenAsmWriter.inc -gen-asm-writer)
+tablegen(LLVM RISCV0GenSubtargetInfo.inc -gen-subtarget)
 
 add_public_tablegen_target(RISCV0CommonTableGen)
 
 add_llvm_target(RISCV0CodeGen
   RISCV0TargetMachine.cpp
+  RISCV0Subtarget.cpp
 
   LINK_COMPONENTS
   Analysis
@@ -20,6 +22,7 @@ add_llvm_target(RISCV0CodeGen
   Core
   MC
   RISCV0Info
+  RISCV0Desc
   SelectionDAG
   Support
   Target

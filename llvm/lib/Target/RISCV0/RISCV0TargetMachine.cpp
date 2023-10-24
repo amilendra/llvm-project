@@ -22,7 +22,7 @@
 #include "llvm/Target/TargetOptions.h"
 using namespace llvm;
 
-extern "C" void LLVMInitializeRISCV0Target() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeRISCV0Target() {
   RegisterTargetMachine<RISCV0TargetMachine> X(getTheRISCV032Target());
   RegisterTargetMachine<RISCV0TargetMachine> Y(getTheRISCV064Target());
 }

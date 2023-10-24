@@ -18,18 +18,21 @@
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/MCRegisterInfo.h"
-#include "llvm/MC/MCStreamer.h"
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/ErrorHandling.h"
 
+using namespace llvm;
+
 #define GET_INSTRINFO_MC_DESC
 #include "RISCV0GenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_MC_DESC
+#include "RISCV0GenSubtargetInfo.inc"
 
 #define GET_REGINFO_MC_DESC
 #include "RISCV0GenRegisterInfo.inc"
 
-using namespace llvm;
 
 static MCInstrInfo *createRISCV0MCInstrInfo() {
   MCInstrInfo *X = new MCInstrInfo();
@@ -49,6 +52,14 @@ static MCAsmInfo *createRISCV0MCAsmInfo(const MCRegisterInfo &MRI,
   return new RISCV0MCAsmInfo(TT);
 }
 
+static MCSubtargetInfo *
+createRISCV0MCSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS) {
+  if (CPU.empty() || CPU == "generic")
+    CPU = TT.isArch64Bit() ? "generic-rv064" : "generic-rv032";
+
+  return createRISCV0MCSubtargetInfoImpl(TT, CPU, /*TuneCPU*/ CPU, FS);
+}
+
 static MCInstPrinter *createRISCV0MCInstPrinter(const Triple &T,
                                                 unsigned SyntaxVariant,
                                                 const MCAsmInfo &MAI,
@@ -57,7 +68,7 @@ static MCInstPrinter *createRISCV0MCInstPrinter(const Triple &T,
   return new RISCV0InstPrinter(MAI, MII, MRI);
 }
 
-extern "C" void LLVMInitializeRISCV0TargetMC() {
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeRISCV0TargetMC() {
   for (Target *T : {&getTheRISCV032Target(), &getTheRISCV064Target()}) {
     TargetRegistry::RegisterMCAsmInfo(*T, createRISCV0MCAsmInfo);
     TargetRegistry::RegisterMCInstrInfo(*T, createRISCV0MCInstrInfo);
@@ -65,5 +76,6 @@ extern "C" void LLVMInitializeRISCV0TargetMC() {
     TargetRegistry::RegisterMCAsmBackend(*T, createRISCV0AsmBackend);
     TargetRegistry::RegisterMCCodeEmitter(*T, createRISCV0MCCodeEmitter);
     TargetRegistry::RegisterMCInstPrinter(*T, createRISCV0MCInstPrinter);
+    TargetRegistry::RegisterMCSubtargetInfo(*T, createRISCV0MCSubtargetInfo);
   }
 }
