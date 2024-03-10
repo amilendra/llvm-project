@@ -11,9 +11,13 @@
 //===----------------------------------------------------------------------===//
 
 #include "Cpu0MCTargetDesc.h"
+#include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/TargetRegistry.h"
 
 using namespace llvm;
+
+#define GET_SUBTARGETINFO_MC_DESC
+#include "Cpu0GenSubtargetInfo.inc"
 
 //@2 {
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0TargetMC() {}
