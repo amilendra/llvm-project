@@ -10,6 +10,8 @@ include "llvm/Target/Target.td"
 
 include "Cpu0RegisterInfo.td"
 
+include "Cpu0InstrInfo.td"
+
 //===----------------------------------------------------------------------===//
 // Calling Conv, Instruction Descriptions
 //===----------------------------------------------------------------------===//
@@ -23,5 +25,8 @@ class Proc<string Name, list<SubtargetFeature> Features>
 
 def : Proc<"cpu032I",  []>;
 
-def Cpu0 : Target {
+def Cpu0InstrInfo : InstrInfo;
+def Cpu0 : Target
+{
+  let InstructionSet = Cpu0InstrInfo;
 }

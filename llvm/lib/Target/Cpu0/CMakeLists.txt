@@ -5,6 +5,8 @@ set(LLVM_TARGET_DEFINITIONS Cpu0.td)
 tablegen(LLVM Cpu0GenSubtargetInfo.inc -gen-subtarget)
 # Cpu0GenRegisterInfo.inc comes from Cpu0RegisterInfo.td
 tablegen(LLVM Cpu0GenRegisterInfo.inc -gen-register-info)
+# Cpu0GenInstrInfo.inc comes from Cpu0InstrInfo.td.
+tablegen(LLVM Cpu0GenInstrInfo.inc -gen-instr-info)
 
 # Cpu0CommonTableGen must be defined
 add_public_tablegen_target(Cpu0CommonTableGen)
