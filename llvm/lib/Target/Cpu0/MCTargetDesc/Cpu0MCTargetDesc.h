@@ -16,4 +16,9 @@
 #define GET_SUBTARGETINFO_ENUM
 #include "Cpu0GenSubtargetInfo.inc"
 
+// Defines symbolic names for Cpu0 registers.  This defines a mapping from
+// register name to register number.
+#define GET_REGINFO_ENUM
+#include "Cpu0GenRegisterInfo.inc"
+
 #endif
