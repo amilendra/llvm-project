@@ -8,6 +8,8 @@
 
 include "llvm/Target/Target.td"
 
+include "Cpu0RegisterInfo.td"
+
 //===----------------------------------------------------------------------===//
 // Calling Conv, Instruction Descriptions
 //===----------------------------------------------------------------------===//
