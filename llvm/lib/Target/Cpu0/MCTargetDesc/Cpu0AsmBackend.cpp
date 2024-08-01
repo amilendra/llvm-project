@@ -45,6 +45,7 @@ static unsigned adjustFixupValue(const MCFixup &Fixup, uint64_t Value,
     return 0;
   case FK_GPRel_4:
   case FK_Data_4:
+  case Cpu0::fixup_Cpu0_CALL16:
   case Cpu0::fixup_Cpu0_LO16:
   case Cpu0::fixup_Cpu0_GOT_LO16:
     break;
@@ -139,6 +140,7 @@ Cpu0AsmBackend::getFixupKindInfo(MCFixupKind Kind) const {
       {"fixup_Cpu0_GOT", 0, 16, 0},
       {"fixup_Cpu0_PC16", 0, 16, MCFixupKindInfo::FKF_IsPCRel},
       {"fixup_Cpu0_PC24", 0, 24, JSUBReloRec},
+      {"fixup_Cpu0_CALL16", 0, 16, 0},
       {"fixup_Cpu0_GOT_HI16", 0, 16, 0},
       {"fixup_Cpu0_GOT_LO16", 0, 16, 0}};
 
