@@ -38,6 +38,8 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case bpfeb:          return "bpfeb";
   case bpfel:          return "bpfel";
   case csky:           return "csky";
+  case cpu0:           return "cpu0";
+  case cpu0el:         return "cpu0el";
   case dxil:           return "dxil";
   case hexagon:        return "hexagon";
   case hsail64:        return "hsail64";
@@ -447,6 +449,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("renderscript64", renderscript64)
     .Case("ve", ve)
     .Case("csky", csky)
+    .Case("cpu0", cpu0)
+    .Case("cpu0el", cpu0el)
     .Case("loongarch32", loongarch32)
     .Case("loongarch64", loongarch64)
     .Case("dxil", dxil)
@@ -591,6 +595,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
           .Case("wasm32", Triple::wasm32)
           .Case("wasm64", Triple::wasm64)
           .Case("csky", Triple::csky)
+          .Case("cpu0", Triple::cpu0)
+          .Case("cpu0el", Triple::cpu0el)
           .Case("loongarch32", Triple::loongarch32)
           .Case("loongarch64", Triple::loongarch64)
           .Cases("dxil", "dxilv1.0", "dxilv1.1", "dxilv1.2", "dxilv1.3",
@@ -893,6 +899,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::avr:
   case Triple::bpfeb:
   case Triple::bpfel:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::hexagon:
   case Triple::hsail64:
@@ -1589,6 +1597,8 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::arc:
   case llvm::Triple::arm:
   case llvm::Triple::armeb:
+  case llvm::Triple::cpu0:
+  case llvm::Triple::cpu0el:
   case llvm::Triple::csky:
   case llvm::Triple::dxil:
   case llvm::Triple::hexagon:
@@ -1679,6 +1689,8 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::arc:
   case Triple::arm:
   case Triple::armeb:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
@@ -1745,6 +1757,8 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::UnknownArch:
   case Triple::arc:
   case Triple::avr:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
