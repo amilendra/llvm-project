@@ -1,0 +1,15 @@
+add_llvm_component_library(LLVMOR1KAsmParser
+  OR1KAsmParser.cpp
+
+  LINK_COMPONENTS
+  OR1KDesc
+  OR1KInfo
+  CodeGenTypes
+  MC
+  MCParser
+  Support
+
+  ADD_TO_COMPONENT
+  OR1K
+)
+
