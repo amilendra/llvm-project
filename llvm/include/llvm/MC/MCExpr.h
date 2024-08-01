@@ -247,6 +247,15 @@ public:
     VK_AVR_DIFF32,
     VK_AVR_PM,
 
+    VK_OR1K_ABS_HI,
+    VK_OR1K_ABS_LO,
+    VK_OR1K_PLT,
+    VK_OR1K_GOT,
+    VK_OR1K_GOTPCHI,
+    VK_OR1K_GOTPCLO,
+    VK_OR1K_GOTOFFHI,
+    VK_OR1K_GOTOFFLO,
+
     VK_PPC_LO,              // symbol@l
     VK_PPC_HI,              // symbol@h
     VK_PPC_HA,              // symbol@ha
