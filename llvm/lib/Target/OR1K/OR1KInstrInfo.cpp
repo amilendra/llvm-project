@@ -1,4 +1,4 @@
-//=- OR1KInstrInfo.h - OR1K Instruction Information ---*- C++ -*-===//
+//=- OR1KInstrInfo.cpp - OR1K Instruction Information -*- C++ -*-===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -10,24 +10,15 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_LIB_TARGET_OR1K_OR1KINSTRINFO_H
-#define LLVM_LIB_TARGET_OR1K_OR1KINSTRINFO_H
+#include "OR1KInstrInfo.h"
 
-#include "llvm/CodeGen/TargetInstrInfo.h"
+using namespace llvm;
 
-#define GET_INSTRINFO_HEADER
+#define GET_INSTRINFO_CTOR_DTOR
 #include "OR1KGenInstrInfo.inc"
 
-namespace llvm {
+OR1KInstrInfo::OR1KInstrInfo(OR1KSubtarget &STI)
+    // FIXME: add CFSetup and CFDestroy Inst when we implement function call.
+    : OR1KGenInstrInfo(),
 
-class OR1KSubtarget;
-
-class OR1KInstrInfo : public OR1KGenInstrInfo {
-  const OR1KSubtarget &STI;
-
-public:
-  explicit OR1KInstrInfo(OR1KSubtarget &STI);
-};
-
-} // end namespace llvm
-#endif // LLVM_LIB_TARGET_OR1K_OR1KINSTRINFO_H
+      STI(STI) {}

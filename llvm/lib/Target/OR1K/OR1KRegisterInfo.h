@@ -1,18 +1,18 @@
-//===- OR1KRegisterInfo.h - OR1K Register Information Impl ------*- C++ -*-===//
+//= OR1KRegisterInfo.h - OR1K Register Information Impl -*- C++ -*-=//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
-// This file contains the OR1K implementation of the TargetRegisterInfo class.
+// This file contains the OR1K implementation of the TargetRegisterInfo
+// class.
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef OR1KREGISTERINFO_H
-#define OR1KREGISTERINFO_H
+#ifndef LLVM_LIB_TARGET_OR1K_OR1KREGISTERINFO_H
+#define LLVM_LIB_TARGET_OR1K_OR1KREGISTERINFO_H
 
 #include "llvm/CodeGen/TargetRegisterInfo.h"
 
@@ -21,32 +21,29 @@
 
 namespace llvm {
 
-class TargetInstrInfo;
-class Type;
-
 struct OR1KRegisterInfo : public OR1KGenRegisterInfo {
-  const TargetInstrInfo &TII;
 
-  OR1KRegisterInfo(const TargetInstrInfo &tii);
+  OR1KRegisterInfo(unsigned HwMode);
 
-  /// Code Generation virtual methods...
-  const uint16_t *getCalleeSavedRegs(const MachineFunction *MF) const override;
+  const MCPhysReg *getCalleeSavedRegs(const MachineFunction *MF) const override;
+  const uint32_t *getCallPreservedMask(const MachineFunction &MF,
+                                       CallingConv::ID) const override;
+  const uint32_t *getNoPreservedMask() const override;
 
   BitVector getReservedRegs(const MachineFunction &MF) const override;
 
-  bool requiresRegisterScavenging(const MachineFunction &MF) const override;
+  const TargetRegisterClass *
+  getPointerRegClass(const MachineFunction &MF,
+                     unsigned Kind = 0) const override {
+    return &OR1K::GPRRegClass;
+  }
 
-  void eliminateFrameIndex(MachineBasicBlock::iterator II,
-                           int SPAdj, unsigned FIOperandNum,
+  bool eliminateFrameIndex(MachineBasicBlock::iterator II, int SPAdj,
+                           unsigned FIOperandNum,
                            RegScavenger *RS = NULL) const override;
 
-  bool hasBasePointer(const MachineFunction &MF) const;
-
-  // Debug information queries.
-  unsigned getFrameRegister(const MachineFunction &MF) const override;
-  unsigned getBaseRegister() const;
+  Register getFrameRegister(const MachineFunction &MF) const override;
 };
+} // namespace llvm
 
-} // end namespace llvm
-
-#endif
+#endif // LLVM_LIB_TARGET_OR1K_OR1KREGISTERINFO_H
