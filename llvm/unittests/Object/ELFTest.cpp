@@ -14,6 +14,10 @@ using namespace llvm;
 using namespace llvm::object;
 using namespace llvm::ELF;
 
+TEST(ELFTest, getELFRelocationTypeNameForOR1K) {
+  EXPECT_EQ("R_OR1K_NONE", getELFRelocationTypeName(EM_OR1K, R_OR1K_NONE));
+}
+
 TEST(ELFTest, getELFRelocationTypeNameForVE) {
   EXPECT_EQ("R_VE_NONE", getELFRelocationTypeName(EM_VE, R_VE_NONE));
   EXPECT_EQ("R_VE_REFLONG", getELFRelocationTypeName(EM_VE, R_VE_REFLONG));

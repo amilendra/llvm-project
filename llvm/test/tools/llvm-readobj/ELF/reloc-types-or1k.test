@@ -1,0 +1,19 @@
+## Test that llvm-readobj/llvm-readelf shows proper relocation type
+## names and values for or1k target.
+
+# RUN: yaml2obj %s -o %t-or1k.o
+# RUN: llvm-readobj -r --expand-relocs %t-or1k.o | FileCheck %s
+
+# CHECK: Type: R_OR1K_NONE (0)
+
+--- !ELF
+FileHeader:
+  Class:   ELFCLASS32
+  Data:    ELFDATA2LSB
+  Type:    ET_REL
+  Machine: EM_OR1K
+Sections:
+  - Name: .rela.text
+    Type: SHT_RELA
+    Relocations:
+      - Type: R_OR1K_NONE

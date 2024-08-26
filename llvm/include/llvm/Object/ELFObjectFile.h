@@ -1314,6 +1314,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf32-sparc";
     case ELF::EM_AMDGPU:
       return "elf32-amdgpu";
+    case ELF::EM_OR1K:
+      return "elf32-or1k";
     case ELF::EM_LOONGARCH:
       return "elf32-loongarch";
     case ELF::EM_XTENSA:
@@ -1429,6 +1431,9 @@ template <class ELFT> Triple::ArchType ELFObjectFile<ELFT>::getArch() const {
       return Triple::nvptx;
     return Triple::nvptx64;
   }
+
+  case ELF::EM_OR1K:
+    return Triple::or1k;
 
   case ELF::EM_BPF:
     return IsLittleEndian ? Triple::bpfel : Triple::bpfeb;

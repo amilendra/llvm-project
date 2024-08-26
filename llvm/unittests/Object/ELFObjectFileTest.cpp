@@ -232,6 +232,13 @@ TEST(ELFObjectFileTest, MachineTestForBPF) {
     checkFormatAndArch(Data, Formats[Idx], Archs[Idx]);
 }
 
+TEST(ELFObjectFileTest, MachineTestForOR1K) {
+  std::array<StringRef, 4> Formats = {"elf32-or1k", "elf32-or1k",
+                                      "elf64-unknown", "elf64-unknown"};
+  for (auto [Idx, Data] : enumerate(generateData(ELF::EM_OR1K)))
+    checkFormatAndArch(Data, Formats[Idx], Triple::or1k);
+}
+
 TEST(ELFObjectFileTest, MachineTestForAVR) {
   std::array<StringRef, 4> Formats = {"elf32-avr", "elf32-avr", "elf64-unknown",
                                       "elf64-unknown"};

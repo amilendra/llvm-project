@@ -321,6 +321,7 @@ enum {
   EM_VE = 251,            // NEC SX-Aurora VE
   EM_CSKY = 252,          // C-SKY 32-bit processor
   EM_LOONGARCH = 258,     // LoongArch
+  EM_OR1K = 999,          // Document LLVM Backend Tutorial OR1K
 };
 
 // Object file classes.
@@ -606,6 +607,11 @@ enum {
   ODK_GP_GROUP = 9,   // GP group to use for text/data sections
   ODK_IDENT = 10,     // ID information
   ODK_PAGESIZE = 11   // Page size information
+};
+
+// ELF Relocation types for OR1K
+enum {
+#include "ELFRelocs/OR1K.def"
 };
 
 // Hexagon-specific e_flags
