@@ -20,10 +20,14 @@ include "llvm/Target/Target.td"
 //===----------------------------------------------------------------------===//
 
 include "OR1KRegisterInfo.td"
+include "OR1KCallingConv.td"
 include "OR1KInstrInfo.td"
 
 def OR1KInstrInfo : InstrInfo;
 
+def OR1KAsmParser : AsmParser;
+
+def OR1KAsmWriter : AsmWriter;
 //===----------------------------------------------------------------------===//
 // OR1K processors supported.
 //===----------------------------------------------------------------------===//
@@ -38,7 +42,7 @@ def : Proc<"or1200",  []>;
 // Declare the target which we are implementing
 //===----------------------------------------------------------------------===//
 
-def OR1K : Target {
+ def OR1K : Target {
   // Pull in Instruction Info:
   let InstructionSet = OR1KInstrInfo;
 }
