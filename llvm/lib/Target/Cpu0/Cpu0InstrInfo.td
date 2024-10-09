@@ -445,6 +445,7 @@ class JumpFR<bits<8> op, string instr_asm, RegisterClass RC>:
      !strconcat(instr_asm, "\t$ra"), [(brind RC:$ra)], IIBranch> {
   let rb = 0;
   let imm16 = 0;
+  let DecoderMethod = "DecodeJumpFR";
 }
 //@JumpFR }
 
@@ -464,6 +465,7 @@ let isCall=1, hasDelaySlot=1 in {
     FJ<op, (outs), (ins calltarget:$addr, variable_ops),
        !strconcat(instr_asm, "\t$addr"), [(Cpu0JmpLink imm:$addr)],
        IIBranch> {
+       let DecoderMethod = "DecodeJumpTarget";
        }
   //@JumpLink }
 
