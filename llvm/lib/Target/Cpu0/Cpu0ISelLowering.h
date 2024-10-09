@@ -94,6 +94,24 @@ public:
 
   SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 
+  MachineBasicBlock *
+  EmitInstrWithCustomInserter(MachineInstr &MI,
+                              MachineBasicBlock *MBB) const override;
+
+  /// If a physical register, this returns the register that receives the
+  /// exception address on entry to an EH pad.
+  Register
+  getExceptionPointerRegister(const Constant *PersonalityFn) const override {
+    return Cpu0::A0;
+  }
+
+  /// If a physical register, this returns the register that receives the
+  /// exception typeid on entry to a landing pad.
+  Register
+  getExceptionSelectorRegister(const Constant *PersonalityFn) const override {
+    return Cpu0::A1;
+  }
+
 protected:
   SDValue getGlobalReg(SelectionDAG &DAG, EVT Ty) const;
 
@@ -301,12 +319,15 @@ private:
   SDValue lowerBlockAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerGlobalTLSAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerVASTART(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerADD(SDValue Op, SelectionDAG &DAG) const;
+
+  SDValue lowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue lowerShiftLeftParts(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerShiftRightParts(SDValue Op, SelectionDAG &DAG, bool IsSRA) const;
@@ -396,6 +417,28 @@ private:
                              Instruction *I = nullptr) const override;
 
   bool isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const override;
+
+  bool shouldInsertFencesForAtomic(const Instruction *I) const override {
+    return true;
+  }
+
+  /// Emit a sign-extension using shl/sra appropriately.
+  MachineBasicBlock *emitSignExtendToI32InReg(MachineInstr &MI,
+                                              MachineBasicBlock *BB,
+                                              unsigned Size, unsigned DstReg,
+                                              unsigned SrcRec) const;
+  MachineBasicBlock *emitAtomicBinary(MachineInstr &MI, MachineBasicBlock *BB,
+                                      unsigned Size, unsigned BinOpcode,
+                                      bool Nand = false) const;
+  MachineBasicBlock *emitAtomicBinaryPartword(MachineInstr &MI,
+                                              MachineBasicBlock *BB,
+                                              unsigned Size, unsigned BinOpcode,
+                                              bool Nand = false) const;
+  MachineBasicBlock *emitAtomicCmpSwap(MachineInstr &MI, MachineBasicBlock *BB,
+                                       unsigned Size) const;
+  MachineBasicBlock *emitAtomicCmpSwapPartword(MachineInstr &MI,
+                                               MachineBasicBlock *BB,
+                                               unsigned Size) const;
 };
 const Cpu0TargetLowering *
 createCpu0SETargetLowering(const Cpu0TargetMachine &TM,
