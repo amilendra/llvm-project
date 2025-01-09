@@ -39,6 +39,10 @@ private:
   // tblgen'erated function.
   bool lowerPseudoInstExpansion(const MachineInstr *MI, MCInst &Inst);
 
+#ifdef ENABLE_GPRESTORE
+  void emitPseudoCPRestore(MCStreamer &OutStreamer, const MachineInstr *MI);
+#endif
+
   // lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
   bool lowerOperand(const MachineOperand &MO, MCOperand &MCOp);
 
