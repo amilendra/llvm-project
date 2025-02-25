@@ -21,6 +21,7 @@ tablegen(LLVM Cpu0GenMCPseudoLowering.inc -gen-pseudo-lowering)
 add_public_tablegen_target(Cpu0CommonTableGen)
 
 add_llvm_target(Cpu0CodeGen
+  Cpu0AnalyzeImmediate.cpp
   Cpu0AsmPrinter.cpp
   Cpu0MCInstLower.cpp
   Cpu0FrameLowering.cpp
