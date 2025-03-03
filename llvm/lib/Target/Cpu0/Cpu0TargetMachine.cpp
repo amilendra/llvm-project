@@ -151,6 +151,7 @@ public:
   const Cpu0Subtarget &getCpu0Subtarget() const {
     return *getCpu0TargetMachine().getSubtargetImpl();
   }
+  void addIRPasses() override;
   bool addInstSelector() override;
   void addPreEmitPass() override;
 #ifdef ENABLE_GPRESTORE
@@ -167,6 +168,11 @@ MachineFunctionInfo *Cpu0TargetMachine::createMachineFunctionInfo(
     BumpPtrAllocator &Allocator, const Function &F,
     const TargetSubtargetInfo *STI) const {
   return Cpu0FunctionInfo::create<Cpu0FunctionInfo>(Allocator, F, STI);
+}
+
+void Cpu0PassConfig::addIRPasses() {
+  TargetPassConfig::addIRPasses();
+  addPass(createAtomicExpandLegacyPass());
 }
 
 // Install an instruction selector pass using
