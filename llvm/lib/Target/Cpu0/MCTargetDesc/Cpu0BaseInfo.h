@@ -15,6 +15,7 @@
 
 #include "Cpu0Config.h"
 
+#include "Cpu0FixupKinds.h"
 #include "Cpu0MCTargetDesc.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/Support/DataTypes.h"
