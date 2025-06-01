@@ -15,6 +15,7 @@
 #include "TargetInfo/Cpu0TargetInfo.h"
 
 #include "Cpu0MachineFunction.h"
+#include "Cpu0SEISelDAGToDAG.h"
 #include "Cpu0Subtarget.h"
 #include "Cpu0TargetObjectFile.h"
 #include "llvm/CodeGen/Passes.h"
@@ -150,6 +151,7 @@ public:
   const Cpu0Subtarget &getCpu0Subtarget() const {
     return *getCpu0TargetMachine().getSubtargetImpl();
   }
+  bool addInstSelector() override;
 };
 } // namespace
 
@@ -161,4 +163,11 @@ MachineFunctionInfo *Cpu0TargetMachine::createMachineFunctionInfo(
     BumpPtrAllocator &Allocator, const Function &F,
     const TargetSubtargetInfo *STI) const {
   return Cpu0FunctionInfo::create<Cpu0FunctionInfo>(Allocator, F, STI);
+}
+
+// Install an instruction selector pass using
+// the ISelDag to gen Cpu0 code.
+bool Cpu0PassConfig::addInstSelector() {
+  addPass(createCpu0SEISelDag(getCpu0TargetMachine(), getOptLevel()));
+  return false;
 }
