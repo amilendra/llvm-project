@@ -20,6 +20,7 @@
 #include "Targets/AVR.h"
 #include "Targets/BPF.h"
 #include "Targets/CSKY.h"
+#include "Targets/Cpu0.h"
 #include "Targets/DirectX.h"
 #include "Targets/Hexagon.h"
 #include "Targets/Lanai.h"
@@ -130,6 +131,10 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
 
   case llvm::Triple::lanai:
     return std::make_unique<LanaiTargetInfo>(Triple, Opts);
+
+  case llvm::Triple::cpu0:
+  case llvm::Triple::cpu0el:
+    return std::make_unique<Cpu0TargetInfo>(Triple, Opts);
 
   case llvm::Triple::aarch64_32:
     if (Triple.isOSDarwin())
