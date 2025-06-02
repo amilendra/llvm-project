@@ -41,6 +41,7 @@ add_clang_library(clangDriver
   ToolChains/Arch/AArch64.cpp
   ToolChains/Arch/AMDGPU.cpp
   ToolChains/Arch/ARM.cpp
+  ToolChains/Arch/Cpu0.cpp
   ToolChains/Arch/CSKY.cpp
   ToolChains/Arch/LoongArch.cpp
   ToolChains/Arch/M68k.cpp
