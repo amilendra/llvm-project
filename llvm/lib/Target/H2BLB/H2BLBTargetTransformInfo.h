@@ -44,7 +44,7 @@ public:
   /// @{
   unsigned getLoadVectorFactor(unsigned VF, unsigned LoadSize,
                                unsigned ChainSizeInBytes,
-                               VectorType *VecTy) const;
+                               VectorType *VecTy) const override;
   /// @}
 
   InstructionCost
