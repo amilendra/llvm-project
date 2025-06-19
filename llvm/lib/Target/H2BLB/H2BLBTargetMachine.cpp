@@ -111,6 +111,16 @@ TargetPassConfig *H2BLBTargetMachine::createPassConfig(PassManagerBase &PM) {
   return new H2BLBPassConfig(*this, PM);
 }
 
+ScheduleDAGInstrs *
+H2BLBTargetMachine::createMachineScheduler(MachineSchedContext *C) const {
+  ScheduleDAGMILive *DAG = new ScheduleDAGMILive(
+      C, UseCustomSched ? std::make_unique<H2BLBPreRASchedStrategy>(C)
+                        : std::make_unique<GenericScheduler>(C));
+  // add DAG Mutations here.
+
+  return DAG;
+}
+
 H2BLBPassConfig::H2BLBPassConfig(TargetMachine &TM, PassManagerBase &PM)
     : TargetPassConfig(TM, PM) {}
 
