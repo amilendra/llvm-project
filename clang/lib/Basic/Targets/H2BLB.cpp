@@ -22,17 +22,22 @@ void H2BLBTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__H2BLB__", "1");
 }
 
-static constexpr Builtin::Info BuiltinInfo[] = {
-#define BUILTIN(ID, TYPE, ATTRS)                                               \
-  {#ID, TYPE, ATTRS, nullptr, HeaderDesc::NO_HEADER, ALL_LANGUAGES},
-#define LIBBUILTIN(ID, TYPE, ATTRS, HEADER)                                    \
-  {#ID, TYPE, ATTRS, nullptr, HEADER, ALL_LANGUAGES},
-#define TARGET_BUILTIN(ID, TYPE, ATTRS, FEATURE)                               \
-  {#ID, TYPE, ATTRS, FEATURE, HeaderDesc::NO_HEADER, ALL_LANGUAGES},
-#include "clang/Basic/BuiltinsH2BLB.def"
+static constexpr int NumBuiltins =
+    clang::H2BLB::LastTSBuiltin - Builtin::FirstTSBuiltin;
+
+#define GET_BUILTIN_STR_TABLE
+#include "clang/Basic/BuiltinsH2BLB.inc"
+#undef GET_BUILTIN_STR_TABLE
+
+static constexpr Builtin::Info BuiltinInfos[] = {
+#define GET_BUILTIN_INFOS
+#include "clang/Basic/BuiltinsH2BLB.inc"
+#undef GET_BUILTIN_INFOS
 };
 
-ArrayRef<Builtin::Info> H2BLBTargetInfo::getTargetBuiltins() const {
-  return llvm::ArrayRef(BuiltinInfo,
-                        clang::H2BLB::LastTSBuiltin - Builtin::FirstTSBuiltin);
+static_assert(std::size(BuiltinInfos) == NumBuiltins);
+
+llvm::SmallVector<Builtin::InfosShard>
+H2BLBTargetInfo::getTargetBuiltins() const {
+  return {{&BuiltinStrings, BuiltinInfos}};
 }
