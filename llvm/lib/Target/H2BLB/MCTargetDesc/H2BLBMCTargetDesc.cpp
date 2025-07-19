@@ -26,6 +26,12 @@ using namespace llvm;
 #define GET_SUBTARGETINFO_MC_DESC
 #include "H2BLBGenSubtargetInfo.inc"
 
+static MCRegisterInfo *createH2BLBMCRegisterInfo(const Triple &Triple) {
+  MCRegisterInfo *X = new MCRegisterInfo();
+  // TODO: Fill out the register info.
+  return X;
+}
+
 static MCSubtargetInfo *
 createH2BLBMCSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS) {
   return createH2BLBMCSubtargetInfoImpl(TT, CPU, /*TuneCPU*/ CPU, FS);
@@ -33,6 +39,9 @@ createH2BLBMCSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS) {
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeH2BLBTargetMC() {
   Target &TheTarget = getTheH2BLBTarget();
+
+  // Register the MC register info.
+  TargetRegistry::RegisterMCRegInfo(TheTarget, createH2BLBMCRegisterInfo);
 
   // Register the MC subtarget info.
   TargetRegistry::RegisterMCSubtargetInfo(TheTarget,
