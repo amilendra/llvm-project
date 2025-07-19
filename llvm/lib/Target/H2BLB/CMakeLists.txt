@@ -22,6 +22,7 @@ add_llvm_target(H2BLBCodeGen
   CodeGen
   Core
   MC
+  Passes
   SelectionDAG
   Support
   Target
