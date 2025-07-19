@@ -46,6 +46,10 @@ public:
                                unsigned ChainSizeInBytes,
                                VectorType *VecTy) const;
   /// @}
+
+  InstructionCost
+  getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
+                        TTI::TargetCostKind CostKind) const override;
 };
 
 } // end namespace llvm
