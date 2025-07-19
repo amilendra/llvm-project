@@ -1,4 +1,4 @@
-//===-- H2BLBRegisterInfo.cpp - H2BLB Register Information -------*- C++-*-===//
+//===-- H2BLBRegisterInfo.cpp - H2BLB Register Information ------*- C++ -*-===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -13,7 +13,6 @@
 #include "H2BLBRegisterInfo.h"
 #include "H2BLBFrameLowering.h"
 #include "MCTargetDesc/H2BLBMCTargetDesc.h" // For the enum of the regclasses.
-
 #include "llvm/ADT/BitVector.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
@@ -23,7 +22,7 @@
 
 using namespace llvm;
 
-H2BLBRegisterInfo::H2BLBRegisterInfo() : H2BLBGenRegisterInfo(0, 0, 0, 0, 0) {}
+H2BLBRegisterInfo::H2BLBRegisterInfo() : H2BLBGenRegisterInfo(Register()) {}
 
 const MCPhysReg *
 H2BLBRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
@@ -31,7 +30,7 @@ H2BLBRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
 }
 
 BitVector H2BLBRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
-  BitVector Reserved(1);
+  BitVector Reserved(getNumRegs());
   return Reserved;
 }
 bool H2BLBRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
