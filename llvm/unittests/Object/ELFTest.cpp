@@ -14,6 +14,47 @@ using namespace llvm;
 using namespace llvm::object;
 using namespace llvm::ELF;
 
+TEST(ELFTest, getELFRelocationTypeNameForCpu0) {
+  EXPECT_EQ("R_CPU0_NONE", getELFRelocationTypeName(EM_CPU0, R_CPU0_NONE));
+  EXPECT_EQ("R_CPU0_32", getELFRelocationTypeName(EM_CPU0, R_CPU0_32));
+  EXPECT_EQ("R_CPU0_HI16", getELFRelocationTypeName(EM_CPU0, R_CPU0_HI16));
+  EXPECT_EQ("R_CPU0_LO16", getELFRelocationTypeName(EM_CPU0, R_CPU0_LO16));
+  EXPECT_EQ("R_CPU0_GPREL16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_GPREL16));
+  EXPECT_EQ("R_CPU0_LITERAL",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_LITERAL));
+  EXPECT_EQ("R_CPU0_GOT16", getELFRelocationTypeName(EM_CPU0, R_CPU0_GOT16));
+  EXPECT_EQ("R_CPU0_PC16", getELFRelocationTypeName(EM_CPU0, R_CPU0_PC16));
+  EXPECT_EQ("R_CPU0_CALL16", getELFRelocationTypeName(EM_CPU0, R_CPU0_CALL16));
+  EXPECT_EQ("R_CPU0_GPREL32",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_GPREL32));
+  EXPECT_EQ("R_CPU0_PC24", getELFRelocationTypeName(EM_CPU0, R_CPU0_PC24));
+  EXPECT_EQ("R_CPU0_GOT_HI16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_GOT_HI16));
+  EXPECT_EQ("R_CPU0_GOT_LO16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_GOT_LO16));
+  EXPECT_EQ("R_CPU0_RELGOT", getELFRelocationTypeName(EM_CPU0, R_CPU0_RELGOT));
+  EXPECT_EQ("R_CPU0_TLS_GD", getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_GD));
+  EXPECT_EQ("R_CPU0_TLS_LDM",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_LDM));
+  EXPECT_EQ("R_CPU0_TLS_DTP_HI16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_DTP_HI16));
+  EXPECT_EQ("R_CPU0_TLS_DTP_LO16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_DTP_LO16));
+  EXPECT_EQ("R_CPU0_TLS_GOTTPREL",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_GOTTPREL));
+  EXPECT_EQ("R_CPU0_TLS_TPREL32",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_TPREL32));
+  EXPECT_EQ("R_CPU0_TLS_TP_HI16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_TP_HI16));
+  EXPECT_EQ("R_CPU0_TLS_TP_LO16",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_TLS_TP_LO16));
+  EXPECT_EQ("R_CPU0_GLOB_DAT",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_GLOB_DAT));
+  EXPECT_EQ("R_CPU0_JUMP_SLOT",
+            getELFRelocationTypeName(EM_CPU0, R_CPU0_JUMP_SLOT));
+}
+
 TEST(ELFTest, getELFRelocationTypeNameForVE) {
   EXPECT_EQ("R_VE_NONE", getELFRelocationTypeName(EM_VE, R_VE_NONE));
   EXPECT_EQ("R_VE_REFLONG", getELFRelocationTypeName(EM_VE, R_VE_REFLONG));
