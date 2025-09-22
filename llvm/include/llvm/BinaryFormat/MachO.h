@@ -1704,6 +1704,10 @@ enum CPUSubTypeRISCV {
   CPU_SUBTYPE_RISCV_ALL = 0,
 };
 
+enum CPUSubTypeH2BLB {
+  CPU_SUBTYPE_H2BLB_ALL = 0,
+};
+
 LLVM_ABI Expected<uint32_t> getCPUType(const Triple &T);
 LLVM_ABI Expected<uint32_t> getCPUSubType(const Triple &T);
 LLVM_ABI Expected<uint32_t> getCPUSubType(const Triple &T,
