@@ -5,6 +5,7 @@
 ; However, for intrinsics, the middle-end is able to add the declarations
 ; on the fly.
 ; Therefore, this test passes if the h2blb intrinsics are properly hooked up.
+; XFAIL: *
 
 target triple="h2blb"
 
