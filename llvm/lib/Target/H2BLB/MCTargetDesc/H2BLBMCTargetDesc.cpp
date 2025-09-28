@@ -11,14 +11,30 @@
 //===----------------------------------------------------------------------===//
 
 #include "H2BLBMCTargetDesc.h"
+#include "TargetInfo/H2BLBTargetInfo.h" // For getTheH2BLBTarget.
 #include "llvm/MC/MCRegisterInfo.h"
-
-#include "llvm/Support/Compiler.h" // For LLVM_EXTERNAL_VISIBILITY.
+#include "llvm/MC/MCSubtargetInfo.h"
+#include "llvm/MC/TargetRegistry.h"
+#include "llvm/Support/Compiler.h"  // For LLVM_EXTERNAL_VISIBILITY.
+#include "llvm/TargetParser/Triple.h"
 
 using namespace llvm;
 
 #define GET_REGINFO_MC_DESC
 #include "H2BLBGenRegisterInfo.inc"
 
-extern "C" LLVM_ABI LLVM_EXTERNAL_VISIBILITY void
-LLVMInitializeH2BLBTargetMC() {}
+#define GET_SUBTARGETINFO_MC_DESC
+#include "H2BLBGenSubtargetInfo.inc"
+
+static MCSubtargetInfo *
+createH2BLBMCSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS) {
+  return createH2BLBMCSubtargetInfoImpl(TT, CPU, /*TuneCPU*/ CPU, FS);
+}
+
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeH2BLBTargetMC() {
+  Target &TheTarget = getTheH2BLBTarget();
+
+  // Register the MC subtarget info.
+  TargetRegistry::RegisterMCSubtargetInfo(TheTarget,
+                                          createH2BLBMCSubtargetInfo);
+}
