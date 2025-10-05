@@ -115,6 +115,11 @@ static std::string computeCSKYDataLayout(const Triple &TT) {
          "-v128:32:32-a:0:32-Fi32-n32";
 }
 
+static std::string computeH2BLBDataLayout(const Triple &TT) {
+  std::string Ret = "";
+  return Ret;
+}
+
 static std::string computeLoongArchDataLayout(const Triple &TT) {
   if (TT.isLoongArch64())
     return "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128";
@@ -553,6 +558,8 @@ std::string Triple::computeDataLayout(StringRef ABIName) const {
     // See https://github.com/llvm/llvm-project/issues/123968
     return "e-m:e-p:32:32-i1:32-i8:8-i16:16-i32:32-i64:64-f16:16-"
            "f32:32-f64:64-n8:16:32:64-v48:16:16-v96:32:32-v192:64:64";
+  case Triple::h2blb:
+    return computeH2BLBDataLayout(*this);
   case Triple::hexagon:
     return "e-m:e-p:32:32:32-a:0-n16:32-"
            "i64:64:64-i32:32:32-i16:16:16-i1:8:8-f32:32:32-f64:64:64-"
