@@ -18,6 +18,7 @@
 
 #include "Cpu0.h"
 #include "MCTargetDesc/Cpu0ABIInfo.h"
+#include "MCTargetDesc/Cpu0BaseInfo.h"
 #include "llvm/CodeGen/CallingConvLower.h"
 #include "llvm/CodeGen/SelectionDAG.h"
 #include "llvm/CodeGen/TargetLowering.h"
