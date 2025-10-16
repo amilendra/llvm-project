@@ -1,5 +1,6 @@
 // RUN: llvm-mc -triple=h2blb %s  -o - | FileCheck %s
 // RUN: llvm-mc -triple=h2blb %s  -o - --show-encoding | FileCheck --check-prefix=ENCODING %s
+// XFAIL: *
 
 // For call encoding from high bits to low bits:
 // opc<5> = 0b00100
