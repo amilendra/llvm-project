@@ -103,6 +103,15 @@ bool Cpu0FrameLowering::hasFPImpl(const MachineFunction &MF) const {
 MachineBasicBlock::iterator Cpu0FrameLowering::eliminateCallFramePseudoInstr(
     MachineFunction &MF, MachineBasicBlock &MBB,
     MachineBasicBlock::iterator I) const {
+  unsigned SP = Cpu0::SP;
+
+  if (!hasReservedCallFrame(MF)) {
+    int64_t Amount = I->getOperand(0).getImm();
+    if (I->getOpcode() == Cpu0::ADJCALLSTACKDOWN)
+      Amount = -Amount;
+
+    STI.getInstrInfo()->adjustStackPtr(SP, Amount, MBB, I);
+  }
 
   return MBB.erase(I);
 }
