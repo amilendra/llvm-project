@@ -13,6 +13,7 @@
 #include "MCTargetDesc/Cpu0BaseInfo.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
+#include "llvm/CodeGen/PseudoSourceValueManager.h"
 #include "llvm/IR/Function.h"
 
 using namespace llvm;
@@ -37,6 +38,16 @@ void Cpu0FunctionInfo::createEhDataRegsFI(MachineFunction &MF) {
     EhDataRegFI[I] = MF.getFrameInfo().CreateStackObject(
         TRI.getSpillSize(RC), TRI.getSpillAlign(RC), false);
   }
+}
+
+MachinePointerInfo Cpu0FunctionInfo::callPtrInfo(MachineFunction &MF,
+                                                 const char *ES) {
+  return MachinePointerInfo(MF.getPSVManager().getExternalSymbolCallEntry(ES));
+}
+
+MachinePointerInfo Cpu0FunctionInfo::callPtrInfo(MachineFunction &MF,
+                                                 const GlobalValue *GV) {
+  return MachinePointerInfo(MF.getPSVManager().getGlobalValueCallEntry(GV));
 }
 
 void Cpu0FunctionInfo::anchor() {}
