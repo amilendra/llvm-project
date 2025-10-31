@@ -35,6 +35,10 @@ private:
   // Insert instructions to initialize the global base register in the
   // first MBB of the function.
   //  void initGlobalBaseReg(MachineFunction &MF);
+
+  std::pair<SDNode *, SDNode *> selectMULT(SDNode *N, unsigned Opc,
+                                           const SDLoc &DL, EVT Ty, bool HasLo,
+                                           bool HasHi);
 };
 
 class Cpu0SEDAGToDAGISelLegacy : public Cpu0DAGToDAGISelLegacy {
