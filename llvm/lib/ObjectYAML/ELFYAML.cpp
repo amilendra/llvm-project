@@ -357,6 +357,7 @@ void ScalarEnumerationTraits<ELFYAML::ELF_EM>::enumeration(
   ECase(EM_BPF);
   ECase(EM_VE);
   ECase(EM_CSKY);
+  ECase(EM_CPU0);
   ECase(EM_LOONGARCH);
   ECase(EM_INTELGT);
 #undef ECase
@@ -964,6 +965,9 @@ void ScalarEnumerationTraits<ELFYAML::ELF_REL>::enumeration(
     break;
   case ELF::EM_BPF:
 #include "llvm/BinaryFormat/ELFRelocs/BPF.def"
+    break;
+  case ELF::EM_CPU0:
+#include "llvm/BinaryFormat/ELFRelocs/Cpu0.def"
     break;
   case ELF::EM_VE:
 #include "llvm/BinaryFormat/ELFRelocs/VE.def"
