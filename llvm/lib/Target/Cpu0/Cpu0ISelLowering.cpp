@@ -124,6 +124,7 @@ Cpu0TargetLowering::Cpu0TargetLowering(const Cpu0TargetMachine &TM,
   setOperationAction(ISD::GlobalAddress, MVT::i32, Custom);
   setOperationAction(ISD::BlockAddress, MVT::i32, Custom);
   setOperationAction(ISD::JumpTable, MVT::i32, Custom);
+  setOperationAction(ISD::SELECT, MVT::i32, Custom);
   setOperationAction(ISD::BRCOND, MVT::Other, Custom);
 
   // Handle i64 shl
@@ -139,6 +140,8 @@ Cpu0TargetLowering::Cpu0TargetLowering(const Cpu0TargetMachine &TM,
   // Operations not directly supported by Cpu0.
   setOperationAction(ISD::BR_JT, MVT::Other, Expand);
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
+  setOperationAction(ISD::SELECT_CC, MVT::i32, Expand);
+  setOperationAction(ISD::SELECT_CC, MVT::Other, Expand);
   setOperationAction(ISD::CTPOP, MVT::i32, Expand);
   setOperationAction(ISD::CTTZ, MVT::i32, Expand);
   setOperationAction(ISD::CTTZ_ZERO_UNDEF, MVT::i32, Expand);
@@ -233,6 +236,8 @@ SDValue Cpu0TargetLowering::LowerOperation(SDValue Op,
     return lowerBlockAddress(Op, DAG);
   case ISD::JumpTable:
     return lowerJumpTable(Op, DAG);
+  case ISD::SELECT:
+    return lowerSELECT(Op, DAG);
   }
   return SDValue();
 }
@@ -245,6 +250,10 @@ SDValue Cpu0TargetLowering::LowerOperation(SDValue Op,
 //  Misc Lower Operation implementation
 //===----------------------------------------------------------------------===//
 SDValue Cpu0TargetLowering::lowerBRCOND(SDValue Op, SelectionDAG &DAG) const {
+  return Op;
+}
+
+SDValue Cpu0TargetLowering::lowerSELECT(SDValue Op, SelectionDAG &DAG) const {
   return Op;
 }
 
