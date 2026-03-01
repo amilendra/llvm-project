@@ -45,6 +45,18 @@ FastISel *H2BLBTargetLowering::createFastISel(
   return H2BLB::createFastISel(funcInfo, libInfo, LibcallLowering);
 }
 
+bool H2BLBTargetLowering::allowsMisalignedMemoryAccesses(
+    EVT VT, unsigned AddrSpace, Align Alignment, MachineMemOperand::Flags Flags,
+    unsigned *Fast) const {
+  return true;
+}
+
+bool H2BLBTargetLowering::allowsMisalignedMemoryAccesses(
+    LLT Ty, unsigned AddrSpace, Align Alignment, MachineMemOperand::Flags Flags,
+    unsigned *Fast) const {
+  return true;
+}
+
 bool H2BLBTargetLowering::CanLowerReturn(
     CallingConv::ID CallConv, MachineFunction &MF, bool IsVarArg,
     const SmallVectorImpl<ISD::OutputArg> &Outs, LLVMContext &Context,
