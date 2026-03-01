@@ -27,4 +27,5 @@ void H2BLBSubtarget::anchor() {}
 H2BLBSubtarget::H2BLBSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
                                const TargetMachine &TM)
 
-    : H2BLBGenSubtargetInfo(TT, CPU, /*TuneCPU=*/"", FS), TLInfo(TM, *this) {}
+    : H2BLBGenSubtargetInfo(TT, CPU, /*TuneCPU=*/"", FS), InstrInfo(*this),
+      TLInfo(TM, *this) {}
