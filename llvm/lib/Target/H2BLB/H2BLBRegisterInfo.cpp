@@ -30,6 +30,12 @@ H2BLBRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
   return CSR_SaveList;
 }
 
+const uint32_t *
+H2BLBRegisterInfo::getCallPreservedMask(const MachineFunction &MF,
+                                        CallingConv::ID CC) const {
+  return CSR_RegMask;
+}
+
 BitVector H2BLBRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   BitVector Reserved(getNumRegs());
   // Reserve the stack register so that the register allocator doesn't
@@ -83,12 +89,6 @@ bool H2BLBRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 }
 
 const uint32_t *H2BLBRegisterInfo::getNoPreservedMask() const { return 0; }
-
-const uint32_t *
-H2BLBRegisterInfo::getCallPreservedMask(const MachineFunction &MF,
-                                        CallingConv::ID CC) const {
-  return 0;
-}
 
 const TargetRegisterClass *
 H2BLBRegisterInfo::getPointerRegClass(unsigned Kind) const {
