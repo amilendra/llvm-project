@@ -27,4 +27,7 @@ class MCRegisterInfo;
 #define GET_REGINFO_ENUM
 #include "H2BLBGenRegisterInfo.inc"
 
+#define GET_SUBTARGETINFO_ENUM
+#include "H2BLBGenSubtargetInfo.inc"
+
 #endif // LLVM_LIB_TARGET_H2BLB_MCTARGETDESC_H2BLBMCTARGETDESC_H
