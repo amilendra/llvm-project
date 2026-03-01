@@ -74,6 +74,9 @@ public:
 
   bool enableMachineScheduler() const override { return true; }
   bool enableMachineSchedDefaultSched() const override { return false; }
+
+  void overrideSchedPolicy(MachineSchedPolicy &Policy,
+                           const SchedRegion &Region) const override;
 };
 
 } // end namespace llvm
