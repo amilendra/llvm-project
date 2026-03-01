@@ -12,14 +12,18 @@
 //===----------------------------------------------------------------------===//
 #ifndef LLVM_LIB_TARGET_H2BLB_H2BLB_H
 #define LLVM_LIB_TARGET_H2BLB_H2BLB_H
+#include "H2BLBISelLowering.h"
 #include "llvm/IR/PassManager.h" // For PassInfoMixin.
 #include "llvm/PassRegistry.h"
 
 namespace llvm {
 class Function;
+class FunctionLoweringInfo;
+class FastISel;
+class H2BLBTargetMachine;
 class Pass;
 class PassRegistry;
-class H2BLBTargetMachine;
+class TargetLibraryInfo;
 
 class H2BLBSimpleConstantPropagationNewPass
     : public llvm::PassInfoMixin<H2BLBSimpleConstantPropagationNewPass> {
@@ -33,5 +37,11 @@ Pass *createH2BLBSimpleConstantPropagationPassForLegacyPM();
 
 void initializeH2BLBDAGToDAGISelLegacyPass(PassRegistry &);
 Pass *createH2BLBISelDAG(H2BLBTargetMachine &TM);
+namespace H2BLB {
+FastISel *createFastISel(FunctionLoweringInfo &FuncInfo,
+                         const TargetLibraryInfo *LibInfo,
+                         const LibcallLoweringInfo *LibcallLowering);
+
+} // end namespace H2BLB.
 } // end namespace llvm.
 #endif
