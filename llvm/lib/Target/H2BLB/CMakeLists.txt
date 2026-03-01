@@ -13,6 +13,7 @@ add_llvm_target(H2BLBCodeGen
   H2BLBSimpleConstantPropagation.cpp
   H2BLBSubtarget.cpp
   H2BLBTargetMachine.cpp
+  H2BLBTargetObjectFile.cpp
   H2BLBTargetTransformInfo.cpp
 
   LINK_COMPONENTS
