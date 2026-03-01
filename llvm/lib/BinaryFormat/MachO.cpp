@@ -95,6 +95,10 @@ Expected<uint32_t> MachO::getCPUType(const Triple &T) {
     return MachO::CPU_TYPE_POWERPC64;
   if (T.getArch() == Triple::riscv32)
     return MachO::CPU_TYPE_RISCV;
+  if (T.getArch() == Triple::h2blb) {
+    // We don't have an officially supported format.
+    return MachO::CPU_TYPE_ANY;
+  }
   return unsupported("type", T);
 }
 
@@ -111,6 +115,10 @@ Expected<uint32_t> MachO::getCPUSubType(const Triple &T) {
     return getPowerPCSubType(T);
   if (T.getArch() == Triple::riscv32)
     return getRISCVSubType(T);
+  if (T.getArch() == Triple::h2blb) {
+    // We don't have an officially supported format.
+    return MachO::CPU_SUBTYPE_H2BLB_ALL;
+  }
   return unsupported("subtype", T);
 }
 
