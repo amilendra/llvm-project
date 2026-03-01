@@ -20,5 +20,8 @@ using namespace llvm;
 #define DEBUG_TYPE "h2blb-lowering"
 
 H2BLBTargetLowering::H2BLBTargetLowering(const TargetMachine &TM,
-                                         const H2BLBSubtarget &STI)
-    : TargetLowering(TM, STI) {}
+                                         const H2BLBSubtarget &ST)
+    : TargetLowering(TM, ST) {}
+
+// Calling Convention Implementation
+#include "H2BLBGenCallingConv.inc"
