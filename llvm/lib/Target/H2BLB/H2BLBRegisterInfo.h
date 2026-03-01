@@ -1,4 +1,4 @@
-//===-- H2BLBRegisterInfo.h - H2BLB Register Information Impl ----*- C++-*-===//
+//===-- H2BLBRegisterInfo.h - H2BLB Register Information Impl ---*- C++ -*-===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -12,6 +12,8 @@
 
 #ifndef LLVM_LIB_TARGET_H2BLB_H2BLBREGISTERINFO_H
 #define LLVM_LIB_TARGET_H2BLB_H2BLBREGISTERINFO_H
+
+#include "llvm/CodeGen/TargetRegisterInfo.h"
 
 #define GET_REGINFO_HEADER
 #include "H2BLBGenRegisterInfo.inc"
