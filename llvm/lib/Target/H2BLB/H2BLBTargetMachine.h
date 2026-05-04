@@ -44,6 +44,9 @@ public:
   // Register the target specific passes that this backend offers.
   void registerPassBuilderCallbacks(PassBuilder &PB) override;
   TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
+  // Add custom machine scheduler heuristic;
+  ScheduleDAGInstrs *
+  createMachineScheduler(MachineSchedContext *C) const override;
 };
 
 class H2BLBPassConfig : public TargetPassConfig {
