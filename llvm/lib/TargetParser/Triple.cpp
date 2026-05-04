@@ -54,6 +54,8 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
     return "csky";
   case dxil:
     return "dxil";
+  case h2blb:
+    return "h2blb";
   case hexagon:
     return "hexagon";
   case hsail64:
@@ -273,6 +275,9 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
 
   case hexagon:
     return "hexagon";
+
+  case h2blb:
+    return "h2blb";
 
   case amdgcn:
     return "amdgcn";
@@ -669,6 +674,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
       .Case("armeb", armeb)
       .Case("avr", avr)
       .StartsWith("bpf", BPFArch)
+      .Case("h2blb", h2blb)
       .Case("m68k", m68k)
       .Case("mips", mips)
       .Case("mipsel", mipsel)
@@ -820,6 +826,7 @@ Triple::ArchType Triple::parseArch(StringRef ArchName) {
           .Case("armeb", Triple::armeb)
           .Case("thumb", Triple::thumb)
           .Case("thumbeb", Triple::thumbeb)
+          .Case("h2blb", Triple::h2blb)
           .Case("avr", Triple::avr)
           .Case("m68k", Triple::m68k)
           .Case("msp430", Triple::msp430)
@@ -1186,6 +1193,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::aarch64:
   case Triple::aarch64_32:
   case Triple::arm:
+  case Triple::h2blb:
   case Triple::thumb:
   case Triple::x86:
   case Triple::x86_64:
@@ -1970,6 +1978,7 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
     return 0;
 
   case llvm::Triple::avr:
+  case llvm::Triple::h2blb:
   case llvm::Triple::msp430:
     return 16;
 
@@ -2091,6 +2100,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::armeb:
   case Triple::csky:
   case Triple::dxil:
+  case Triple::h2blb:
   case Triple::hexagon:
   case Triple::hsail:
   case Triple::kalimba:
@@ -2192,6 +2202,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::avr:
   case Triple::csky:
   case Triple::dxil:
+  case Triple::h2blb:
   case Triple::hexagon:
   case Triple::kalimba:
   case Triple::lanai:
@@ -2316,6 +2327,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::amdil:
   case Triple::avr:
   case Triple::dxil:
+  case Triple::h2blb:
   case Triple::hexagon:
   case Triple::hsail64:
   case Triple::hsail:
@@ -2454,6 +2466,7 @@ bool Triple::isLittleEndian() const {
   case Triple::bpfel:
   case Triple::csky:
   case Triple::dxil:
+  case Triple::h2blb:
   case Triple::hexagon:
   case Triple::hsail64:
   case Triple::hsail:
