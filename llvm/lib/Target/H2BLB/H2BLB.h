@@ -20,6 +20,9 @@ namespace llvm {
 class Function;
 class FunctionLoweringInfo;
 class FastISel;
+class InstructionSelector;
+class H2BLBRegisterBankInfo;
+class H2BLBSubtarget;
 class H2BLBTargetMachine;
 class Pass;
 class PassRegistry;
@@ -41,6 +44,10 @@ namespace H2BLB {
 FastISel *createFastISel(FunctionLoweringInfo &FuncInfo,
                          const TargetLibraryInfo *LibInfo,
                          const LibcallLoweringInfo *LibcallLowering);
+
+InstructionSelector *createInstructionSelector(const H2BLBTargetMachine &,
+                                               const H2BLBSubtarget &,
+                                               const H2BLBRegisterBankInfo &);
 
 } // end namespace H2BLB.
 } // end namespace llvm.
