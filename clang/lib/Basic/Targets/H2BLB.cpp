@@ -20,16 +20,15 @@ using namespace clang::targets;
 static constexpr int NumBuiltins =
     clang::H2BLB::LastTSBuiltin - Builtin::FirstTSBuiltin;
 
-static constexpr llvm::StringTable BuiltinStrings =
-    CLANG_BUILTIN_STR_TABLE_START
-#define BUILTIN CLANG_BUILTIN_STR_TABLE
-#include "clang/Basic/BuiltinsH2BLB.def"
-    ;
+#define GET_BUILTIN_STR_TABLE
+#include "clang/Basic/BuiltinsH2BLB.inc"
+#undef GET_BUILTIN_STR_TABLE
 
-static constexpr auto BuiltinInfos = Builtin::MakeInfos<NumBuiltins>({
-#define BUILTIN CLANG_BUILTIN_ENTRY
-#include "clang/Basic/BuiltinsH2BLB.def"
-});
+static constexpr Builtin::Info BuiltinInfos[NumBuiltins] = {
+#define GET_BUILTIN_INFOS
+#include "clang/Basic/BuiltinsH2BLB.inc"
+#undef GET_BUILTIN_INFOS
+};
 
 void H2BLBTargetInfo::getTargetDefines(const LangOptions &Opts,
                                        MacroBuilder &Builder) const {
