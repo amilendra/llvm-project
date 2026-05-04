@@ -16,12 +16,13 @@ include "llvm/Target/Target.td"
 include "H2BLBRegisterInfo.td"
 include "H2BLBCallingConvention.td"
 include "H2BLBInstrInfo.td"
+include "H2BLBSchedModel.td"
 include "GISel/H2BLBCombine.td"
 include "GISel/H2BLBRegisterBanks.td"
 
 defm : RemapAllTargetPseudoPointerOperands<GPR32>;
 
-def : ProcessorModel<"generic", NoSchedModel, /*Features=*/[]>;
+def : ProcessorModel<"generic", H2BLBDefaultModel, /*Features=*/[]>;
 
 def H2BLBInstrInfo : InstrInfo;
 
