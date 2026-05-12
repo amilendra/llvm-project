@@ -52,6 +52,10 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
     return "bpfel";
   case csky:
     return "csky";
+  case cpu0:
+    return "cpu0";
+  case cpu0el:
+    return "cpu0el";
   case dxil:
     return "dxil";
   case hexagon:
@@ -669,6 +673,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
       .Case("armeb", armeb)
       .Case("avr", avr)
       .StartsWith("bpf", BPFArch)
+      .Case("cpu0", cpu0)
+      .Case("cpu0el", cpu0el)
       .Case("m68k", m68k)
       .Case("mips", mips)
       .Case("mipsel", mipsel)
@@ -839,6 +845,8 @@ Triple::ArchType Triple::parseArch(StringRef ArchName) {
           .Case("riscv64", Triple::riscv64)
           .Case("riscv32be", Triple::riscv32be)
           .Case("riscv64be", Triple::riscv64be)
+          .Case("cpu0", Triple::cpu0)
+          .Case("cpu0el", Triple::cpu0el)
           .Case("hexagon", Triple::hexagon)
           .Cases({"s390x", "systemz"}, Triple::systemz)
           .Case("sparc", Triple::sparc)
@@ -1205,6 +1213,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::avr:
   case Triple::bpfeb:
   case Triple::bpfel:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::hexagon:
   case Triple::hsail64:
@@ -1975,6 +1985,8 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::arc:
   case llvm::Triple::arm:
   case llvm::Triple::armeb:
+  case llvm::Triple::cpu0:
+  case llvm::Triple::cpu0el:
   case llvm::Triple::csky:
   case llvm::Triple::dxil:
   case llvm::Triple::hexagon:
@@ -2086,6 +2098,8 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::arc:
   case Triple::arm:
   case Triple::armeb:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
@@ -2187,6 +2201,8 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::UnknownArch:
   case Triple::arc:
   case Triple::avr:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
@@ -2449,6 +2465,7 @@ bool Triple::isLittleEndian() const {
   case Triple::arm:
   case Triple::avr:
   case Triple::bpfel:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:

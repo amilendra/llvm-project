@@ -574,6 +574,7 @@ set(LLVM_ALL_TARGETS
   ARM
   AVR
   BPF
+  Cpu0
   Hexagon
   Lanai
   LoongArch
