@@ -14,6 +14,7 @@
 
 #include "Cpu0MachineFunction.h"
 #include "Cpu0TargetMachine.h"
+#include "InstPrinter/Cpu0InstPrinter.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
