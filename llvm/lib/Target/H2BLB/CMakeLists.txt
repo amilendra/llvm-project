@@ -9,9 +9,10 @@ add_public_tablegen_target(H2BLBCommonTableGen)
 add_llvm_target(H2BLBCodeGen
   H2BLBRegisterInfo.cpp
   H2BLBISelLowering.cpp
+  H2BLBSimpleConstantPropagation.cpp
+  H2BLBSubtarget.cpp
   H2BLBTargetMachine.cpp
   H2BLBTargetTransformInfo.cpp
-  H2BLBSubtarget.cpp
 
   LINK_COMPONENTS
   H2BLBDesc
