@@ -1,5 +1,8 @@
 add_llvm_component_group(Cpu0)
 
+set(LLVM_TARGET_DEFINITIONS Cpu0Asm.td)
+tablegen(LLVM Cpu0GenAsmMatcher.inc -gen-asm-matcher)
+
 set(LLVM_TARGET_DEFINITIONS Cpu0Other.td)
 
 # Generate Cpu0GenRegisterInfo.inc and Cpu0GenInstrInfo.inc which included by
@@ -53,6 +56,7 @@ add_llvm_target(Cpu0CodeGen
   MC
   Cpu0Desc
   Cpu0Info
+  Cpu0AsmParser
   Cpu0AsmPrinter
   Cpu0Disassembler
   SelectionDAG
@@ -68,3 +72,4 @@ add_subdirectory(InstPrinter)
 add_subdirectory(Disassembler)
 add_subdirectory(TargetInfo)
 add_subdirectory(MCTargetDesc)
+add_subdirectory(AsmParser)
