@@ -1,6 +1,5 @@
 ; RUN: llc  -march=cpu0 -mcpu=cpu032I  -relocation-model=pic -O3 %s -o - | FileCheck %s -check-prefix=cpu032I
 ; RUN: llc  -march=cpu0 -mcpu=cpu032II  -relocation-model=pic -O3 %s -o - | FileCheck %s -check-prefix=cpu032II
-; XFAIL: *
 
 @k = global i32 10, align 4
 @r1 = common global i32 0, align 4
