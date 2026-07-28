@@ -1329,6 +1329,7 @@ constexpr EnumStringDef<unsigned, 2> ElfMachineTypeDefs[] = {
   ENUM_ENT(EM_RISCV,         "RISC-V"),
   ENUM_ENT(EM_LANAI,         "EM_LANAI"),
   ENUM_ENT(EM_BPF,           "EM_BPF"),
+  ENUM_ENT(EM_CPU0,          "Cpu0"),
   ENUM_ENT(EM_VE,            "NEC SX-Aurora Vector Engine"),
   ENUM_ENT(EM_LOONGARCH,     "LoongArch"),
   ENUM_ENT(EM_INTELGT,       "Intel Graphics Technology"),
