@@ -79,7 +79,7 @@ public:
 
   bool hasChapter11_2() const { return true; }
 
-  bool hasChapter12_1() const { return false; }
+  bool hasChapter12_1() const { return true; }
 
 protected:
   enum Cpu0ArchEnum { Cpu032I, Cpu032II };
