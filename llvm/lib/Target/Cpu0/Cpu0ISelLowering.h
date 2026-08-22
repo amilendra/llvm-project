@@ -240,6 +240,9 @@ protected:
     /// Return the function that analyzes fixed argument list functions.
     llvm::CCAssignFn *fixedArgFn() const;
 
+    /// Return the function that analyzes variable argument list functions.
+    llvm::CCAssignFn *varArgFn() const;
+
     void allocateRegs(ByValArgInfo &ByVal, unsigned ByValSize, unsigned Align);
 
     /// Return the type of the register which is used to pass an argument or
@@ -299,6 +302,11 @@ private:
   SDValue lowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerSELECT(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerVASTART(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerRETURNADDR(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerADD(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue lowerShiftLeftParts(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerShiftRightParts(SDValue Op, SelectionDAG &DAG, bool IsSRA) const;
@@ -326,6 +334,12 @@ private:
                     MachineFrameInfo &MFI, SelectionDAG &DAG, SDValue Arg,
                     const Cpu0CC &CC, const ByValArgInfo &ByVal,
                     const ISD::ArgFlagsTy &Flags, bool isLittle) const;
+
+  /// writeVarArgRegs - Write variable function arguments passed in registers
+  /// to the stack. Also create a stack frame object for the first variable
+  /// argument.
+  void writeVarArgRegs(std::vector<SDValue> &OutChains, const Cpu0CC &CC,
+                       SDValue Chain, const SDLoc &DL, SelectionDAG &DAG) const;
 
   //- must be exist even without function all
   SDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv,
