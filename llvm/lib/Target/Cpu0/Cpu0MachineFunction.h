@@ -30,12 +30,15 @@ namespace llvm {
 class Cpu0FunctionInfo : public MachineFunctionInfo {
 public:
   Cpu0FunctionInfo(const Function &F, const TargetSubtargetInfo *STI)
-      : VarArgsFrameIndex(0), MaxCallFrameSize(0) {}
+      : VarArgsFrameIndex(0), EmitNOAT(false), MaxCallFrameSize(0) {}
 
   ~Cpu0FunctionInfo();
 
   int getVarArgsFrameIndex() const { return VarArgsFrameIndex; }
   void setVarArgsFrameIndex(int Index) { VarArgsFrameIndex = Index; }
+
+  bool getEmitNOAT() const { return EmitNOAT; }
+  void setEmitNOAT() { EmitNOAT = true; }
 
 private:
   virtual void anchor();
@@ -43,6 +46,7 @@ private:
   /// VarArgsFrameIndex - FrameIndex for start of varargs area.
   int VarArgsFrameIndex;
 
+  bool EmitNOAT;
   unsigned MaxCallFrameSize;
 };
 //@1 }
