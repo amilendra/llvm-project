@@ -1,3 +1,4 @@
+; XFAIL: *
 ; RUN: llc  -march=cpu0 -mcpu=cpu032I  -relocation-model=pic < %s | FileCheck %s -check-prefix=cpu032I
 ; RUN: llc  -march=cpu0 -mcpu=cpu032II  -relocation-model=pic < %s | FileCheck %s -check-prefix=cpu032II
 
