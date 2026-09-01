@@ -1,4 +1,3 @@
-; XFAIL: *
 ; RUN: llc  -march=cpu0el -mcpu=cpu032II -relocation-model=pic -O3 < %s | FileCheck %s -check-prefix=16
 
 @iiii = global i64 5, align 8
