@@ -62,6 +62,11 @@ BitVector Cpu0RegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   for (unsigned I = 0; I < std::size(ReservedCPURegs); ++I)
     Reserved.set(ReservedCPURegs[I]);
 
+  // Reserve FP if this function should have a dedicated frame pointer register.
+  if (MF.getSubtarget().getFrameLowering()->hasFP(MF)) {
+    Reserved.set(Cpu0::FP);
+  }
+
 #ifdef ENABLE_GPRESTORE // 1
   const Cpu0FunctionInfo *Cpu0FI = MF.getInfo<Cpu0FunctionInfo>();
   // Reserve GP if globalBaseRegFixed()
@@ -121,7 +126,11 @@ bool Cpu0RegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   // getFrameRegister() returns.
   unsigned FrameReg;
 
-  FrameReg = Cpu0::SP;
+  if (Cpu0FI->isOutArgFI(FrameIndex) || Cpu0FI->isDynAllocFI(FrameIndex) ||
+      (FrameIndex >= MinCSFI && FrameIndex <= MaxCSFI))
+    FrameReg = Cpu0::SP;
+  else
+    FrameReg = getFrameRegister(MF);
 
   // Calculate final offset.
   // - There is no need to change the offset if the frame object is one of the
@@ -131,7 +140,13 @@ bool Cpu0RegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   //   by adding the size of the stack:
   //   incoming argument, callee-saved register location or local variable.
   int64_t Offset;
-  Offset = spOffset + (int64_t)stackSize;
+#ifdef ENABLE_GPRESTORE // 2
+  if (Cpu0FI->isOutArgFI(FrameIndex) || Cpu0FI->isGPFI(FrameIndex) ||
+      Cpu0FI->isDynAllocFI(FrameIndex))
+    Offset = spOffset;
+  else
+#endif
+    Offset = spOffset + (int64_t)stackSize;
 
   Offset += MI.getOperand(i + 1).getImm();
 
