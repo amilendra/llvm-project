@@ -33,6 +33,17 @@ class Triple;
 class raw_ostream;
 class raw_pwrite_stream;
 
+MCCodeEmitter *createCpu0MCCodeEmitterEB(const MCInstrInfo &MCII,
+                                         MCContext &Ctx);
+MCCodeEmitter *createCpu0MCCodeEmitterEL(const MCInstrInfo &MCII,
+                                         MCContext &Ctx);
+
+MCAsmBackend *createCpu0AsmBackend(const Target &T, const MCSubtargetInfo &STI,
+                                   const MCRegisterInfo &MRI,
+                                   const MCTargetOptions &Options);
+
+std::unique_ptr<MCObjectTargetWriter>
+createCpu0ELFObjectWriter(const Triple &TT);
 } // namespace llvm
 
 // Defines symbolic names for Cpu0 registers.  This defines a mapping from
