@@ -10,6 +10,7 @@
 
 #include "Cpu0InstrInfo.h"
 #include "Cpu0Subtarget.h"
+#include "MCTargetDesc/Cpu0BaseInfo.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/IR/Function.h"
