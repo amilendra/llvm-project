@@ -425,6 +425,16 @@ namespace clang {
     bool isFlagSet(uint64_t Flag) const { return Flags & Flag; }
   };
 
+  /// H2BLB builtins
+  namespace H2BLB {
+  enum {
+    LastTIBuiltin = clang::Builtin::FirstTSBuiltin - 1,
+#define BUILTIN(ID, TYPE, ATTRS) BI##ID,
+#include "clang/Basic/BuiltinsH2BLB.def"
+    LastTSBuiltin
+  };
+  } // namespace H2BLB
+
   /// Hexagon builtins
   namespace Hexagon {
   enum {
@@ -497,7 +507,8 @@ namespace clang {
        PPC::LastTSBuiltin, NVPTX::LastTSBuiltin, AMDGPU::LastTSBuiltin,
        X86::LastTSBuiltin, VE::LastTSBuiltin, RISCV::LastTSBuiltin,
        Hexagon::LastTSBuiltin, Mips::LastTSBuiltin, XCore::LastTSBuiltin,
-       SystemZ::LastTSBuiltin, WebAssembly::LastTSBuiltin, AVR::LastTSBuiltin});
+       SystemZ::LastTSBuiltin, WebAssembly::LastTSBuiltin, AVR::LastTSBuiltin,
+       H2BLB::LastTSBuiltin});
 
 } // end namespace clang.
 
