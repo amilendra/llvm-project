@@ -13,10 +13,12 @@
 #ifndef LLVM_LIB_TARGET_H2BLB_H2BLBSUBTARGET_H
 #define LLVM_LIB_TARGET_H2BLB_H2BLBSUBTARGET_H
 
+#include "H2BLBFrameLowering.h"
 #include "H2BLBISelLowering.h"
 #include "H2BLBInstrInfo.h"
 #include "H2BLBRegisterInfo.h"
 #include "llvm/ADT/StringRef.h"
+#include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 
 #define GET_SUBTARGETINFO_HEADER
@@ -28,14 +30,18 @@ class Triple;
 
 class H2BLBSubtarget : public H2BLBGenSubtargetInfo {
   virtual void anchor();
+  H2BLBFrameLowering FrameLowering;
   H2BLBInstrInfo InstrInfo;
+  H2BLBRegisterInfo RegisterInfo;
   H2BLBTargetLowering TLInfo;
+  SelectionDAGTargetInfo SDTgtInfo;
 
 public:
   H2BLBSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
                  const TargetMachine &TM);
-  const H2BLBTargetLowering *getTargetLowering() const override {
-    return &TLInfo;
+  const H2BLBInstrInfo *getInstrInfo() const override { return &InstrInfo; }
+  const H2BLBFrameLowering *getFrameLowering() const override {
+    return &FrameLowering;
   }
   const H2BLBRegisterInfo *getRegisterInfo() const override {
     return &InstrInfo.getRegisterInfo();
@@ -54,6 +60,13 @@ public:
   const FeatureBitset &getInlineMustMatchFeatures() const override {
     static constexpr FeatureBitset Features;
     return Features;
+  }
+
+  const H2BLBTargetLowering *getTargetLowering() const override {
+    return &TLInfo;
+  }
+  const SelectionDAGTargetInfo *getSelectionDAGInfo() const override {
+    return &SDTgtInfo;
   }
 
   /// Parses features string setting specified subtarget options.
