@@ -5,6 +5,10 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+//
+// This class implements H2BLB-specific bits of TargetFrameLowering class.
+//
+//===----------------------------------------------------------------------===//
 
 #ifndef LLVM_LIB_TARGET_H2BLB_H2BLBFRAMELOWERING_H
 #define LLVM_LIB_TARGET_H2BLB_H2BLBFRAMELOWERING_H
@@ -12,8 +16,18 @@
 #include "llvm/CodeGen/TargetFrameLowering.h"
 
 namespace llvm {
+class H2BLBSubtarget;
 
-class H2BLBFrameLowering : public TargetFrameLowering {};
+class H2BLBFrameLowering : public TargetFrameLowering {
+protected:
+  bool hasFPImpl(const MachineFunction &MF) const override;
 
+public:
+  explicit H2BLBFrameLowering(const H2BLBSubtarget &sti)
+      : TargetFrameLowering(TargetFrameLowering::StackGrowsDown, Align(8), 0) {}
+
+  void emitPrologue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
+  void emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
+};
 } // namespace llvm
 #endif // LLVM_LIB_TARGET_HEXAGON_HEXAGONFRAMELOWERING_H
