@@ -13,6 +13,7 @@
 
 #include "H2BLBISelLowering.h"
 #include "H2BLB.h"
+#include "H2BLBCallingConvention.h"
 #include "H2BLBSubtarget.h"
 #include "H2BLBTargetMachine.h"
 
@@ -23,9 +24,6 @@ using namespace llvm;
 H2BLBTargetLowering::H2BLBTargetLowering(const TargetMachine &TM,
                                          const H2BLBSubtarget &ST)
     : TargetLowering(TM, ST) {}
-
-// Calling Convention Implementation
-#include "H2BLBGenCallingConv.inc"
 
 FastISel *H2BLBTargetLowering::createFastISel(
     FunctionLoweringInfo &funcInfo, const TargetLibraryInfo *libInfo,
