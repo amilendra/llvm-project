@@ -104,6 +104,7 @@ def IsArch64Bit : LibcallPredicate<[{TT.isArch64Bit()}]>;
 def IsOSCygMing : LibcallPredicate<[{TT.isOSCygMing()}]>;
 def IsOSWindowsOrUEFI : LibcallPredicate<[{TT.isOSWindowsOrUEFI()}]>;
 
+def IsH2BLB : LibcallPredicate<[{TT.isH2BLB()}]>;
 def IsMIPS : LibcallPredicate<[{TT.isMIPS()}]>;
 def IsLoongArch : LibcallPredicate<[{TT.isLoongArch()}]>;
 def IsVE : LibcallPredicate<[{TT.isVE()}]>;
@@ -3871,9 +3872,9 @@ def : LibraryExclusion<"libm", isWasm, [sincos, sincosf, sincosl]>;
 
 // TODO: Should make every target explicit.
 def isDefaultLibcallArch : RuntimeLibcallAvailability<
-  (any_of IsMIPS, IsLoongArch, IsVE, IsBPF, IsArchCSKY, IsArchArc, IsArchM68k,
+  (any_of IsH2BLB,
+          IsMIPS, IsLoongArch, IsVE, IsBPF, IsArchCSKY, IsArchArc, IsArchM68k,
           IsArchXtensa, (all_of IsSystemZ, (not IsOSzOS)))>;
-
 
 def LegacyDefaultSystemLibrary
     : SystemRuntimeLibrary<isDefaultLibcallArch,
