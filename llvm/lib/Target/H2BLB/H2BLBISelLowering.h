@@ -25,8 +25,14 @@ class H2BLBTargetLowering : public TargetLowering {
 public:
   explicit H2BLBTargetLowering(const TargetMachine &TM,
                                const H2BLBSubtarget &STI);
-};
 
+  /// This method returns a target specific FastISel object, or null if the
+  /// target does not support "fast" ISel.
+  FastISel *
+  createFastISel(FunctionLoweringInfo &funcInfo,
+                 const TargetLibraryInfo *libInfo,
+                 const LibcallLoweringInfo *LibcallLowering) const override;
+};
 } // end namespace llvm
 
 #endif // LLVM_LIB_TARGET_H2BLB_H2BLBISELLOWERING_H
