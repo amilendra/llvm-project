@@ -72,6 +72,12 @@ H2BLBLegalizerInfo::H2BLBLegalizerInfo(const H2BLBSubtarget &ST) : ST(ST) {
         const auto &DstTy = Query.Types[0];
         return !DstTy.isVector() && DstTy.getSizeInBits() == 32;
       });
+
+  getActionDefinitionsBuilder(TargetOpcode::G_EXTRACT_VECTOR_ELT)
+      .legalIf([=](const LegalityQuery &Q) {
+        return Q.Types[0].getSizeInBits() == 16 &&
+               Q.Types[1].getSizeInBits() == 32;
+      });
 }
 
 bool H2BLBLegalizerInfo::legalizeCustom(
