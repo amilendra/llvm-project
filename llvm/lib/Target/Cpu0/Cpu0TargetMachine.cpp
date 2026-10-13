@@ -14,6 +14,9 @@
 #include "Cpu0.h"
 #include "TargetInfo/Cpu0TargetInfo.h"
 
+#include "Cpu0MachineFunction.h"
+#include "Cpu0Subtarget.h"
+#include "Cpu0TargetObjectFile.h"
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/IR/Attributes.h"
@@ -26,4 +29,108 @@ using namespace llvm;
 
 #define DEBUG_TYPE "cpu0"
 
-extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0Target() {}
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeCpu0Target() {
+  // Register the target.
+  //- Big endian Target Machine
+  RegisterTargetMachine<Cpu0ebTargetMachine> X(getTheCpu0Target());
+  //- Little endian Target Machine
+  RegisterTargetMachine<Cpu0elTargetMachine> Y(getTheCpu0elTarget());
+}
+
+static Reloc::Model getEffectiveRelocModel(bool JIT,
+                                           std::optional<Reloc::Model> RM) {
+  if (!RM.has_value() || JIT)
+    return Reloc::Static;
+  return *RM;
+}
+
+// DataLayout --> Big-endian, 32-bit pointer/ABI/alignment
+// The stack is always 8 byte aligned
+// On function prologue, the stack is created by decrementing
+// its pointer. Once decremented, all references are done with positive
+// offset from the stack/frame pointer, using StackGrowsUp enables
+// an easier handling.
+// Using CodeModel::Large enables different CALL behavior.
+Cpu0TargetMachine::Cpu0TargetMachine(const Target &T, const Triple &TT,
+                                     StringRef CPU, StringRef FS,
+                                     const TargetOptions &Options,
+                                     std::optional<Reloc::Model> RM,
+                                     std::optional<CodeModel::Model> CM,
+                                     CodeGenOptLevel OL, bool JIT,
+                                     bool isLittle)
+    //- Default is big endian
+    : CodeGenTargetMachineImpl(T, TT, CPU, FS, Options,
+                               getEffectiveRelocModel(JIT, RM),
+                               getEffectiveCodeModel(CM, CodeModel::Small), OL),
+      isLittle(isLittle), TLOF(std::make_unique<Cpu0TargetObjectFile>()),
+      ABI(Cpu0ABIInfo::computeTargetABI()),
+      DefaultSubtarget(TT, CPU, FS, isLittle, *this) {
+  // initAsmInfo will display features by llc -march=cpu0 -mcpu=help on 3.7 but
+  // not on 3.6
+  initAsmInfo();
+}
+
+Cpu0TargetMachine::~Cpu0TargetMachine() {}
+
+void Cpu0ebTargetMachine::anchor() {}
+
+Cpu0ebTargetMachine::Cpu0ebTargetMachine(const Target &T, const Triple &TT,
+                                         StringRef CPU, StringRef FS,
+                                         const TargetOptions &Options,
+                                         std::optional<Reloc::Model> RM,
+                                         std::optional<CodeModel::Model> CM,
+                                         CodeGenOptLevel OL, bool JIT)
+    : Cpu0TargetMachine(T, TT, CPU, FS, Options, RM, CM, OL, JIT, false) {}
+
+void Cpu0elTargetMachine::anchor() {}
+
+Cpu0elTargetMachine::Cpu0elTargetMachine(const Target &T, const Triple &TT,
+                                         StringRef CPU, StringRef FS,
+                                         const TargetOptions &Options,
+                                         std::optional<Reloc::Model> RM,
+                                         std::optional<CodeModel::Model> CM,
+                                         CodeGenOptLevel OL, bool JIT)
+    : Cpu0TargetMachine(T, TT, CPU, FS, Options, RM, CM, OL, JIT, true) {}
+
+const Cpu0Subtarget *
+Cpu0TargetMachine::getSubtargetImpl(const Function &F) const {
+  std::string CPU = TargetCPU;
+  std::string FS = TargetFS;
+
+  auto &I = SubtargetMap[CPU + FS];
+  if (!I) {
+    // This needs to be done before we create a new subtarget since any
+    // creation will depend on the TM and the code generation flags on the
+    // function that reside in TargetOptions.
+    I = std::make_unique<Cpu0Subtarget>(TargetTriple, CPU, FS, isLittle, *this);
+  }
+  return I.get();
+}
+
+namespace {
+//@Cpu0PassConfig {
+/// Cpu0 Code Generator Pass Configuration Options.
+class Cpu0PassConfig : public TargetPassConfig {
+public:
+  Cpu0PassConfig(Cpu0TargetMachine &TM, PassManagerBase &PM)
+      : TargetPassConfig(TM, PM) {}
+
+  Cpu0TargetMachine &getCpu0TargetMachine() const {
+    return getTM<Cpu0TargetMachine>();
+  }
+
+  const Cpu0Subtarget &getCpu0Subtarget() const {
+    return *getCpu0TargetMachine().getSubtargetImpl();
+  }
+};
+} // namespace
+
+TargetPassConfig *Cpu0TargetMachine::createPassConfig(PassManagerBase &PM) {
+  return new Cpu0PassConfig(*this, PM);
+}
+
+MachineFunctionInfo *Cpu0TargetMachine::createMachineFunctionInfo(
+    BumpPtrAllocator &Allocator, const Function &F,
+    const TargetSubtargetInfo *STI) const {
+  return Cpu0FunctionInfo::create<Cpu0FunctionInfo>(Allocator, F, STI);
+}
