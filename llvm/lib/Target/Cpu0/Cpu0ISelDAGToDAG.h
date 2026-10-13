@@ -71,6 +71,10 @@ private:
   }
 
   virtual void processFunctionAfterISel(MachineFunction &MF) = 0;
+
+  bool SelectInlineAsmMemoryOperand(const SDValue &Op,
+                                    InlineAsm::ConstraintCode ConstraintID,
+                                    std::vector<SDValue> &OutOps) override;
 };
 
 class Cpu0DAGToDAGISelLegacy : public SelectionDAGISelLegacy {

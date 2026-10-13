@@ -160,8 +160,25 @@ void Cpu0DAGToDAGISel::Select(SDNode *Node) {
   SelectCode(Node);
 }
 
+// inlineasm begin
+bool Cpu0DAGToDAGISel::SelectInlineAsmMemoryOperand(
+    const SDValue &Op, InlineAsm::ConstraintCode ConstraintID,
+    std::vector<SDValue> &OutOps) {
+  // All memory constraints can at least accept raw pointers.
+  switch (ConstraintID) {
+  default:
+    llvm_unreachable("Unexpected asm memory constraint");
+  case InlineAsm::ConstraintCode::m:
+    OutOps.push_back(Op);
+    return false;
+  }
+  return true;
+}
+// inlineasm end
+
 char Cpu0DAGToDAGISelLegacy::ID = 0;
 
 Cpu0DAGToDAGISelLegacy::Cpu0DAGToDAGISelLegacy(
     std::unique_ptr<SelectionDAGISel> S)
     : SelectionDAGISelLegacy(ID, std::move(S)) {}
+
