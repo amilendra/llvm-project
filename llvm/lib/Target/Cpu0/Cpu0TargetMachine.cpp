@@ -11,7 +11,16 @@
 //===----------------------------------------------------------------------===//
 
 #include "Cpu0TargetMachine.h"
+#include "Cpu0.h"
+#include "TargetInfo/Cpu0TargetInfo.h"
+
+#include "llvm/CodeGen/Passes.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
+#include "llvm/IR/Attributes.h"
+#include "llvm/IR/Function.h"
 #include "llvm/MC/TargetRegistry.h"
+#include "llvm/Support/CodeGen.h"
+#include "llvm/Target/TargetOptions.h"
 
 using namespace llvm;
 
