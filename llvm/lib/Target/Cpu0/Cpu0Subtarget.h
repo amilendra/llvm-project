@@ -54,7 +54,7 @@ public:
 
   bool hasChapter4_2() const { return true; }
 
-  bool hasChapter5_1() const { return false; }
+  bool hasChapter5_1() const { return true; }
 
   bool hasChapter6_1() const { return false; }
 
