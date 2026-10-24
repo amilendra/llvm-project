@@ -52,6 +52,16 @@ bool Cpu0DAGToDAGISel::runOnMachineFunction(MachineFunction &MF) {
   return Ret;
 }
 
+/// getGlobalBaseReg - Output the instructions required to put the
+/// GOT address into a register.
+SDNode *Cpu0DAGToDAGISel::getGlobalBaseReg() {
+  unsigned GlobalBaseReg = MF->getInfo<Cpu0FunctionInfo>()->getGlobalBaseReg();
+  return CurDAG
+      ->getRegister(GlobalBaseReg,
+                    getTargetLowering()->getPointerTy(CurDAG->getDataLayout()))
+      .getNode();
+}
+
 //@SelectAddr {
 /// ComplexPattern used on Cpu0InstrInfo
 /// Used on Cpu0 Load/Store instructions
@@ -82,6 +92,20 @@ bool Cpu0DAGToDAGISel::SelectAddr(SDNode *Parent, SDValue Addr, SDValue &Base,
     return true;
   }
 
+  // on PIC code Load GA
+  if (Addr.getOpcode() == Cpu0ISD::Wrapper) {
+    Base = Addr.getOperand(0);
+    Offset = Addr.getOperand(1);
+    return true;
+  }
+
+  //@static
+  if (TM.getRelocationModel() != Reloc::PIC_) {
+    if ((Addr.getOpcode() == ISD::TargetExternalSymbol ||
+         Addr.getOpcode() == ISD::TargetGlobalAddress))
+      return false;
+  }
+
   Base = Addr;
   Offset = CurDAG->getTargetConstant(0, DL, ValTy);
   return true;
@@ -108,6 +132,11 @@ void Cpu0DAGToDAGISel::Select(SDNode *Node) {
   switch (Opcode) {
   default:
     break;
+
+  // Get target GOT address.
+  case ISD::GLOBAL_OFFSET_TABLE:
+    ReplaceNode(Node, getGlobalBaseReg());
+    return;
   }
 
   // Select the default instruction
