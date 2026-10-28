@@ -25,6 +25,8 @@ def SDT_Cpu0JmpLink      : SDTypeProfile<0, 1, [SDTCisVT<0, iPTR>]>;
 def SDT_Cpu0CallSeqStart : SDCallSeqStart<[SDTCisVT<0, i32>]>;
 def SDT_Cpu0CallSeqEnd   : SDCallSeqEnd<[SDTCisVT<0, i32>, SDTCisVT<1, i32>]>;
 
+def SDT_Sync             : SDTypeProfile<0, 1, [SDTCisVT<0, i32>]>;
+
 // Call
 def Cpu0JmpLink : SDNode<"Cpu0ISD::JmpLink",SDT_Cpu0JmpLink,
                          [SDNPHasChain, SDNPOutGlue, SDNPOptInGlue,
@@ -40,6 +42,13 @@ def Cpu0TailCall : SDNode<"Cpu0ISD::TailCall", SDT_Cpu0JmpLink,
 def Cpu0Hi    : SDNode<"Cpu0ISD::Hi", SDTIntUnaryOp>;
 def Cpu0Lo    : SDNode<"Cpu0ISD::Lo", SDTIntUnaryOp>;
 def Cpu0GPRel : SDNode<"Cpu0ISD::GPRel", SDTIntUnaryOp>;
+
+// TlsGd node is used to handle General Dynamic TLS
+def Cpu0TlsGd : SDNode<"Cpu0ISD::TlsGd", SDTIntUnaryOp>;
+
+// TpHi and TpLo nodes are used to handle Local Exec TLS
+def Cpu0TpHi  : SDNode<"Cpu0ISD::TpHi", SDTIntUnaryOp>;
+def Cpu0TpLo  : SDNode<"Cpu0ISD::TpLo", SDTIntUnaryOp>;
 
 // Return
 def Cpu0Ret : SDNode<"Cpu0ISD::Ret", SDTNone,
@@ -58,6 +67,8 @@ def Cpu0DivRemU   : SDNode<"Cpu0ISD::DivRemU", SDT_Cpu0DivRem,
                            [SDNPOutGlue]>;
 
 def Cpu0Wrapper    : SDNode<"Cpu0ISD::Wrapper", SDTIntBinOp>;
+
+def Cpu0Sync : SDNode<"Cpu0ISD::Sync", SDT_Sync, [SDNPHasChain]>;
 
 //===----------------------------------------------------------------------===//
 // Cpu0 Instruction Predicate Definitions.
@@ -189,6 +200,11 @@ def mem_ea : Operand<iPTR> {
   let PrintMethod = "printMemOperandEA";
   let MIOperandInfo = (ops GPROut, simm16);
   let EncoderMethod = "getMemEncoding";
+}
+
+def PtrRC : Operand<iPTR> {
+  let MIOperandInfo = (ops GPROut);
+  let DecoderMethod = "DecodeGPROutRegsRegisterClass";
 }
 
 // Transformation Function - get the lower 16 bits.
@@ -600,10 +616,33 @@ class CountLeading1<bits<8> op, string instr_asm, RegisterClass RC>:
   let shamt = 0;
 }
 
+// Atomic instructions with 2 source operands (ATOMIC_SWAP & ATOMIC_LOAD_*).
+class Atomic2Ops<PatFrag Op, RegisterClass DRC> :
+  PseudoSE<(outs DRC:$dst), (ins PtrRC:$ptr, DRC:$incr),
+           [(set DRC:$dst, (Op iPTR:$ptr, DRC:$incr))]>;
+
+// Atomic Compare & Swap.
+class AtomicCmpSwap<PatFrag Op, RegisterClass DRC> :
+  PseudoSE<(outs DRC:$dst), (ins PtrRC:$ptr, DRC:$cmp, DRC:$swap),
+           [(set DRC:$dst, (Op iPTR:$ptr, DRC:$cmp, DRC:$swap))]>;
+
 //@EffectiveAddress
 class EffectiveAddress<string instr_asm, RegisterClass RC, Operand Mem> :
   FMem<0x09, (outs RC:$ra), (ins Mem:$addr),
      instr_asm, [(set RC:$ra, addr:$addr)], IIAlu>;
+}
+
+class LLBase<bits<8> Opc, string opstring, RegisterClass RC, Operand Mem> :
+  FMem<Opc, (outs RC:$ra), (ins Mem:$addr),
+       !strconcat(opstring, "\t$ra, $addr"), [], IILoad> {
+  let mayLoad = 1;
+}
+
+class SCBase<bits<8> Opc, string opstring, RegisterOperand RO, Operand Mem> :
+  FMem<Opc, (outs RO:$dst), (ins RO:$ra, Mem:$addr),
+       !strconcat(opstring, "\t$ra, $addr"), [], IIStore> {
+  let mayStore = 1;
+  let Constraints = "$ra = $dst";
 }
 
 //===----------------------------------------------------------------------===//
@@ -630,6 +669,37 @@ let hasSideEffects = 0 in
 def CPRESTORE : Cpu0Pseudo<(outs), (ins i32imm:$loc, CPURegs:$gp),
                            ".cprestore\t$loc", []>;
 } // let Predicates = [Ch9_2]
+
+let Predicates = [Ch12_1] in {
+let usesCustomInserter = 1 in {
+  def ATOMIC_LOAD_ADD_I8   : Atomic2Ops<atomic_load_add_i8, CPURegs>;
+  def ATOMIC_LOAD_ADD_I16  : Atomic2Ops<atomic_load_add_i16, CPURegs>;
+  def ATOMIC_LOAD_ADD_I32  : Atomic2Ops<atomic_load_add_i32, CPURegs>;
+  def ATOMIC_LOAD_SUB_I8   : Atomic2Ops<atomic_load_sub_i8, CPURegs>;
+  def ATOMIC_LOAD_SUB_I16  : Atomic2Ops<atomic_load_sub_i16, CPURegs>;
+  def ATOMIC_LOAD_SUB_I32  : Atomic2Ops<atomic_load_sub_i32, CPURegs>;
+  def ATOMIC_LOAD_AND_I8   : Atomic2Ops<atomic_load_and_i8, CPURegs>;
+  def ATOMIC_LOAD_AND_I16  : Atomic2Ops<atomic_load_and_i16, CPURegs>;
+  def ATOMIC_LOAD_AND_I32  : Atomic2Ops<atomic_load_and_i32, CPURegs>;
+  def ATOMIC_LOAD_OR_I8    : Atomic2Ops<atomic_load_or_i8, CPURegs>;
+  def ATOMIC_LOAD_OR_I16   : Atomic2Ops<atomic_load_or_i16, CPURegs>;
+  def ATOMIC_LOAD_OR_I32   : Atomic2Ops<atomic_load_or_i32, CPURegs>;
+  def ATOMIC_LOAD_XOR_I8   : Atomic2Ops<atomic_load_xor_i8, CPURegs>;
+  def ATOMIC_LOAD_XOR_I16  : Atomic2Ops<atomic_load_xor_i16, CPURegs>;
+  def ATOMIC_LOAD_XOR_I32  : Atomic2Ops<atomic_load_xor_i32, CPURegs>;
+  def ATOMIC_LOAD_NAND_I8  : Atomic2Ops<atomic_load_nand_i8, CPURegs>;
+  def ATOMIC_LOAD_NAND_I16 : Atomic2Ops<atomic_load_nand_i16, CPURegs>;
+  def ATOMIC_LOAD_NAND_I32 : Atomic2Ops<atomic_load_nand_i32, CPURegs>;
+
+  def ATOMIC_SWAP_I8       : Atomic2Ops<atomic_swap_i8, CPURegs>;
+  def ATOMIC_SWAP_I16      : Atomic2Ops<atomic_swap_i16, CPURegs>;
+  def ATOMIC_SWAP_I32      : Atomic2Ops<atomic_swap_i32, CPURegs>;
+
+  def ATOMIC_CMP_SWAP_I8   : AtomicCmpSwap<atomic_cmp_swap_i8, CPURegs>;
+  def ATOMIC_CMP_SWAP_I16  : AtomicCmpSwap<atomic_cmp_swap_i16, CPURegs>;
+  def ATOMIC_CMP_SWAP_I32  : AtomicCmpSwap<atomic_cmp_swap_i32, CPURegs>;
+}
+}
 
 let Predicates = [Ch8_2] in {
 // We need these two pseudo instructions to avoid offset calculation for long
@@ -686,6 +756,23 @@ def LH     : LoadM32<0x06, "lh",  sextloadi16_a>;
 def LHu    : LoadM32<0x07, "lhu", zextloadi16_a>;
 def SH     : StoreM32<0x08, "sh", truncstorei16_a>;
 }
+
+let Predicates = [Ch12_1] in {
+let hasSideEffects = 1 in
+def SYNC : Cpu0Inst<(outs), (ins i32imm:$stype), "sync $stype",
+                    [(Cpu0Sync imm:$stype)], NoItinerary, FrmOther>
+{
+  bits<5> stype;
+  let Opcode = 0x60;
+  let Inst{25-11} = 0;
+  let Inst{10-6} = stype;
+  let Inst{5-0} = 0;
+}
+}
+
+/// Load-linked, Store-conditional
+def LL      : LLBase<0x61, "ll", CPURegs, mem>;
+def SC      : SCBase<0x62, "sc", RegisterOperand<CPURegs>, mem>;
 
 /// Arithmetic Instructions (ALU Immediate)
 // IR "add" defined in include/llvm/Target/TargetSelectionDAG.td, line 315 (def add).
@@ -875,6 +962,9 @@ def : Cpu0InstAlias<"move $dst, $src",
                     (ADDu GPROut:$dst, GPROut:$src,ZERO), 1>;
 }
 
+def : Cpu0InstAlias<"sync",
+                    (SYNC 0), 1>;
+
 //===----------------------------------------------------------------------===//
 //  Arbitrary patterns that map to one or more instructions
 //===----------------------------------------------------------------------===//
@@ -924,6 +1014,9 @@ let Predicates = [Ch8_1] in {
 def : Pat<(Cpu0Hi tblockaddress:$in), (LUi tblockaddress:$in)>;
 def : Pat<(Cpu0Hi tjumptable:$in), (LUi tjumptable:$in)>;
 }
+let Predicates = [Ch12_1] in {
+def : Pat<(Cpu0Hi tglobaltlsaddr:$in), (LUi tglobaltlsaddr:$in)>;
+}
 
 let Predicates = [Ch6_1] in {
 def : Pat<(Cpu0Lo tglobaladdr:$in), (ORi ZERO, tglobaladdr:$in)>;
@@ -931,6 +1024,9 @@ def : Pat<(Cpu0Lo tglobaladdr:$in), (ORi ZERO, tglobaladdr:$in)>;
 let Predicates = [Ch8_1] in {
 def : Pat<(Cpu0Lo tblockaddress:$in), (ORi ZERO, tblockaddress:$in)>;
 def : Pat<(Cpu0Lo tjumptable:$in), (ORi ZERO, tjumptable:$in)>;
+}
+let Predicates = [Ch12_1] in {
+def : Pat<(Cpu0Lo tglobaltlsaddr:$in), (ORi ZERO, tglobaltlsaddr:$in)>;
 }
 
 let Predicates = [Ch6_1] in {
@@ -942,6 +1038,10 @@ def : Pat<(add CPURegs:$hi, (Cpu0Lo tblockaddress:$lo)),
               (ORi CPURegs:$hi, tblockaddress:$lo)>;
 def : Pat<(add CPURegs:$hi, (Cpu0Lo tjumptable:$lo)),
               (ORi CPURegs:$hi, tjumptable:$lo)>;
+}
+let Predicates = [Ch12_1] in {
+def : Pat<(add CPURegs:$hi, (Cpu0Lo tglobaltlsaddr:$lo)),
+              (ORi CPURegs:$hi, tglobaltlsaddr:$lo)>;
 }
 // gp_rel relocs
 let Predicates = [Ch6_1] in {
@@ -959,6 +1059,9 @@ def : WrapperPat<tglobaladdr, ORi, GPROut>;
 }
 let Predicates = [Ch8_1] in {
 def : WrapperPat<tjumptable, ORi, GPROut>;
+}
+let Predicates = [Ch12_1] in {
+def : WrapperPat<tglobaltlsaddr, ORi, CPURegs>;
 }
 
 let Predicates = [Ch4_2] in {
