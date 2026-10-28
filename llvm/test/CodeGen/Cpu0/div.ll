@@ -1,4 +1,3 @@
-; XFAIL: *
 ; RUN: llc  -march=cpu0 -relocation-model=pic < %s | FileCheck %s
 
 @iiii = global i32 100, align 4
