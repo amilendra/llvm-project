@@ -61,6 +61,7 @@ public:
     bpfeb,       // eBPF or extended BPF or 64-bit BPF (big endian)
     csky,        // CSKY: csky
     dxil,        // DXIL 32-bit DirectX bytecode
+    h2blb,       // H2BLB: How to build an LLVM backend target
     hexagon,     // Hexagon: hexagon
     loongarch32, // LoongArch (32-bit): loongarch32
     loongarch64, // LoongArch (64-bit): loongarch64
@@ -1114,6 +1115,8 @@ public:
   }
 
   bool isAVR() const { return getArch() == Triple::avr; }
+
+  bool isH2BLB() const { return getArch() == Triple::h2blb; }
 
   /// Tests whether the target is 32-bit LoongArch.
   bool isLoongArch32() const { return getArch() == Triple::loongarch32; }
