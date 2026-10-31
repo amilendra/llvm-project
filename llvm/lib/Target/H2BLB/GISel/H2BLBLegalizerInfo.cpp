@@ -46,6 +46,8 @@ H2BLBLegalizerInfo::H2BLBLegalizerInfo(const H2BLBSubtarget &ST) {
   // Pointer-handling.
   getActionDefinitionsBuilder(TargetOpcode::G_FRAME_INDEX).legalFor({p0});
   getActionDefinitionsBuilder(TargetOpcode::G_PTR_ADD).legalFor({{p0, s16}});
+  getActionDefinitionsBuilder(TargetOpcode::G_TRUNC)
+      .legalForCartesianProduct({s8, s16, s32}, {s8, s16, s32});
 
   // Arithmetic.
   getActionDefinitionsBuilder(TargetOpcode::G_ADD)
