@@ -87,13 +87,8 @@ const uint32_t *H2BLBRegisterInfo::getNoPreservedMask() const { return 0; }
 const uint32_t *
 H2BLBRegisterInfo::getCallPreservedMask(const MachineFunction &MF,
                                         CallingConv::ID CC) const {
-  return 0;
+  return CSR_RegMask;
 }
-
-// const TargetRegisterClass *
-// H2BLBRegisterInfo::getPointerRegClass(unsigned Kind) const {
-//   return &H2BLB::GPR32RegClass;
-// }
 
 Register H2BLBRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   return Register();
