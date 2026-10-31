@@ -34,6 +34,9 @@ add_llvm_target(H2BLBCodeGen
   H2BLBTargetObjectFile.cpp
   H2BLBTargetTransformInfo.cpp
 
+  # GlobalISel related files.
+  GISel/H2BLBCallLowering.cpp
+
   LINK_COMPONENTS
   H2BLBDesc
   H2BLBInfo
@@ -43,6 +46,7 @@ add_llvm_target(H2BLBCodeGen
   CodeGen
   CodeGenTypes
   Core
+  GlobalISel
   MC
   Passes
   SelectionDAG
