@@ -15,5 +15,10 @@ include "llvm/Target/Target.td"
 
 include "H2BLBRegisterInfo.td"
 
+def : ProcessorModel<"generic", NoSchedModel, /*Features=*/[]>;
+
+def H2BLBInstrInfo : InstrInfo;
+
 def H2BLB : Target {
+  let InstructionSet = H2BLBInstrInfo;
 }
