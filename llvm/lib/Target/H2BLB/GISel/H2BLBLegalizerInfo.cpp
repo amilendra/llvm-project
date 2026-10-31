@@ -65,8 +65,8 @@ H2BLBLegalizerInfo::H2BLBLegalizerInfo(const H2BLBSubtarget &ST) : ST(ST) {
       .legalForCartesianProduct({s8, s16, s32}, {s8, s16, s32});
 
   // Arithmetic.
-  getActionDefinitionsBuilder(
-      {TargetOpcode::G_ADD, TargetOpcode::G_AND, TargetOpcode::G_SHL})
+  getActionDefinitionsBuilder({TargetOpcode::G_ADD, TargetOpcode::G_AND,
+                               TargetOpcode::G_SHL, TargetOpcode::G_OR})
       .legalFor({s16, s32})
       .clampScalar(0, s16, s32)
       .scalarize(0);
