@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "H2BLBISelLowering.h"
+#include "H2BLB.h"
 #include "H2BLBSubtarget.h"
 #include "H2BLBTargetMachine.h"
 
@@ -25,3 +26,9 @@ H2BLBTargetLowering::H2BLBTargetLowering(const TargetMachine &TM,
 
 // Calling Convention Implementation
 #include "H2BLBGenCallingConv.inc"
+
+FastISel *H2BLBTargetLowering::createFastISel(
+    FunctionLoweringInfo &funcInfo, const TargetLibraryInfo *libInfo,
+    const LibcallLoweringInfo *LibcallLowering) const {
+  return H2BLB::createFastISel(funcInfo, libInfo, LibcallLowering);
+}
