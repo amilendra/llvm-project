@@ -1,0 +1,58 @@
+//===- H2BLBSubtarget.h - Define Subtarget for the H2BLB --------*- C++ -*-===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+//
+// This file declares the H2BLB specific subclass of TargetSubtarget.
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef LLVM_LIB_TARGET_H2BLB_H2BLBSUBTARGET_H
+#define LLVM_LIB_TARGET_H2BLB_H2BLBSUBTARGET_H
+
+#include "H2BLBISelLowering.h"
+#include "H2BLBRegisterInfo.h"
+#include "llvm/ADT/StringRef.h"
+#include "llvm/CodeGen/TargetSubtargetInfo.h"
+
+namespace llvm {
+
+class TargetMachine;
+class Triple;
+
+class H2BLBSubtarget : public TargetSubtargetInfo {
+  virtual void anchor();
+  H2BLBTargetLowering TLInfo;
+  const H2BLBRegisterInfo RegisterInfo;
+
+public:
+  H2BLBSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
+                 const TargetMachine &TM);
+  const H2BLBTargetLowering *getTargetLowering() const override {
+    return &TLInfo;
+  }
+  const H2BLBRegisterInfo *getRegisterInfo() const override {
+    return &RegisterInfo;
+  }
+  const FeatureBitset &getInlineIgnoreFeatures() const override {
+    static constexpr FeatureBitset Features;
+    return Features;
+  }
+
+  const FeatureBitset &getInlineInverseFeatures() const override {
+    static constexpr FeatureBitset Features;
+    return Features;
+  }
+
+  const FeatureBitset &getInlineMustMatchFeatures() const override {
+    static constexpr FeatureBitset Features;
+    return Features;
+  }
+};
+
+} // end namespace llvm
+
+#endif // LLVM_LIB_TARGET_H2BLB_H2BLBSUBTARGET_H
