@@ -13,14 +13,7 @@
 #ifndef LLVM_LIB_TARGET_H2BLB_MCTARGETDESC_H2BLBMCTARGETDESC_H
 #define LLVM_LIB_TARGET_H2BLB_MCTARGETDESC_H2BLBMCTARGETDESC_H
 
-#include "llvm/Support/DataTypes.h"
-
-namespace llvm {
-
-class Target;
-class MCRegisterInfo;
-
-} // end namespace llvm
+#include <cstdint> // For int16_t and so on used in the .inc files.
 
 // Defines symbolic names for H2BLB registers.  This defines a mapping from
 // register name to register number.
