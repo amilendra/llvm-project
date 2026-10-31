@@ -10,6 +10,27 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "llvm/Support/Compiler.h" // For LLVM_EXTERNAL_VISIBILITY.
+#include "H2BLBTargetMachine.h"
+#include "TargetInfo/H2BLBTargetInfo.h" // For getTheH2BLBTarget.
+#include "llvm/MC/TargetRegistry.h"     // For RegisterTargetMachine.
+#include "llvm/Support/Compiler.h"      // For LLVM_EXTERNAL_VISIBILITY.
 
-extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeH2BLBTarget() {}
+using namespace llvm;
+
+extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeH2BLBTarget() {
+  // Register the target so that external tools can instantiate it.
+  RegisterTargetMachine<H2BLBTargetMachine> X(getTheH2BLBTarget());
+}
+
+H2BLBTargetMachine::H2BLBTargetMachine(const Target &T, const Triple &TT,
+                                       StringRef CPU, StringRef FS,
+                                       const TargetOptions &Options,
+                                       std::optional<Reloc::Model> RM,
+                                       std::optional<CodeModel::Model> CM,
+                                       CodeGenOptLevel OL, bool JIT)
+    : CodeGenTargetMachineImpl(T, TT, CPU, FS, Options,
+                               // Use the simplest relocation by default.
+                               RM ? *RM : Reloc::Static,
+                               CM ? *CM : CodeModel::Small, OL) {}
+
+H2BLBTargetMachine::~H2BLBTargetMachine() = default;
