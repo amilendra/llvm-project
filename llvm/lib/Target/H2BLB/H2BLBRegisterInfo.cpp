@@ -18,10 +18,10 @@
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 
-using namespace llvm;
-
 #define GET_REGINFO_TARGET_DESC
 #include "H2BLBGenRegisterInfo.inc"
+
+using namespace llvm;
 
 H2BLBRegisterInfo::H2BLBRegisterInfo() : H2BLBGenRegisterInfo(0, 0, 0, 0, 0) {}
 
@@ -47,6 +47,11 @@ H2BLBRegisterInfo::getCallPreservedMask(const MachineFunction &MF,
                                         CallingConv::ID CC) const {
   return 0;
 }
+
+// const TargetRegisterClass *
+// H2BLBRegisterInfo::getPointerRegClass(unsigned Kind) const {
+//   return &H2BLB::GPR32RegClass;
+// }
 
 Register H2BLBRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
   return Register();
