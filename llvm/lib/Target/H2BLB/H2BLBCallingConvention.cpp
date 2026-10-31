@@ -17,4 +17,5 @@ using namespace llvm;
 
 // TableGen provides definitions of the calling convention analysis entry
 // points.
+#define GET_CALLING_CONV_IMPL
 #include "H2BLBGenCallingConv.inc"
