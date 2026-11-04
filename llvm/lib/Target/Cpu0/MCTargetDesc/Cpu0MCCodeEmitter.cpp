@@ -142,7 +142,7 @@ Cpu0MCCodeEmitter::getJumpTargetOpValue(const MCInst &MI, unsigned OpNo,
   assert(MO.isExpr() && "getJumpTargetOpValue expects only expressions");
 
   const MCExpr *Expr = MO.getExpr();
-  if (Opcode == Cpu0::JMP || Opcode == Cpu0::BAL)
+  if (Opcode == Cpu0::JSUB || Opcode == Cpu0::JMP || Opcode == Cpu0::BAL)
     Fixups.push_back(
         MCFixup::create(0, Expr, MCFixupKind(Cpu0::fixup_Cpu0_PC24)));
   else
@@ -180,6 +180,9 @@ unsigned Cpu0MCCodeEmitter::getExprOpValue(const MCExpr *Expr,
       //@switch }
     case Cpu0MCExpr::CEK_GPREL:
       FixupKind = Cpu0::fixup_Cpu0_GPREL16;
+      break;
+    case Cpu0MCExpr::CEK_GOT_CALL:
+      FixupKind = Cpu0::fixup_Cpu0_CALL16;
       break;
     case Cpu0MCExpr::CEK_GOT:
       FixupKind = Cpu0::fixup_Cpu0_GOT;
