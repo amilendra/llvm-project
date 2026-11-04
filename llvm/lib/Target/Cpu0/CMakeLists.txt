@@ -6,8 +6,13 @@ set(LLVM_TARGET_DEFINITIONS Cpu0Other.td)
 #  your hand code C++ files.
 # Cpu0GenRegisterInfo.inc came from Cpu0RegisterInfo.td, Cpu0GenInstrInfo.inc
 #  came from Cpu0InstrInfo.td.
+
 llvm_tablegen(Cpu0GenRegisterInfo.inc -gen-register-info)
 llvm_tablegen(Cpu0GenInstrInfo.inc -gen-instr-info)
+llvm_tablegen(Cpu0GenCodeEmitter.inc -gen-emitter)
+llvm_tablegen(Cpu0GenMCCodeEmitter.inc -gen-emitter)
+
+llvm_tablegen(Cpu0GenAsmWriter.inc -gen-asm-writer)
 llvm_tablegen(Cpu0GenDAGISel.inc -gen-dag-isel)
 llvm_tablegen(Cpu0GenCallingConv.inc -gen-callingconv)
 llvm_tablegen(Cpu0GenSubtargetInfo.inc -gen-subtarget)
@@ -17,6 +22,8 @@ llvm_tablegen(Cpu0GenMCPseudoLowering.inc -gen-pseudo-lowering)
 add_public_tablegen_target(Cpu0CommonTableGen)
 
 add_llvm_target(Cpu0CodeGen
+  Cpu0AsmPrinter.cpp
+  Cpu0MCInstLower.cpp
   Cpu0FrameLowering.cpp
   Cpu0InstrInfo.cpp
   Cpu0ISelLowering.cpp
@@ -39,6 +46,7 @@ add_llvm_target(Cpu0CodeGen
   MC
   Cpu0Desc
   Cpu0Info
+  Cpu0AsmPrinter
   SelectionDAG
   Support
   Target
@@ -48,5 +56,6 @@ add_llvm_target(Cpu0CodeGen
   Cpu0
   )
 
+add_subdirectory(InstPrinter)
 add_subdirectory(TargetInfo)
 add_subdirectory(MCTargetDesc)

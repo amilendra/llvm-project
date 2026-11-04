@@ -2516,6 +2516,8 @@ ExceptionHandling Triple::getDefaultExceptionHandling() const {
 
   switch (getArch()) {
   case Triple::arc:
+  case Triple::cpu0:
+  case Triple::cpu0el:
   case Triple::csky:
   case Triple::hexagon:
   case Triple::lanai:
