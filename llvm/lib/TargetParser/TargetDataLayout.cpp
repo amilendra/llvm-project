@@ -107,6 +107,30 @@ static std::string computeLoongArchDataLayout(const Triple &TT) {
   return "e-m:e-p:32:32-i64:64-n32-S128";
 }
 
+static std::string computeCpu0DataLayout(const Triple &TT) {
+  std::string Ret = "";
+  // There are both little and big endian cpu0.
+  if (TT.getArch() == Triple::cpu0el)
+    Ret += "e";
+  else
+    Ret += "E";
+
+  Ret += "-m:m";
+
+  // Pointers are 32 bit on some ABIs.
+  Ret += "-p:32:32";
+
+  // 8 and 16 bit integers only need to have natural alignment, but try to
+  // align them to 32 bits. 64 bit integers have natural alignment.
+  Ret += "-i8:8:32-i16:16:32-i64:64";
+
+  // 32 bit registers are always available and the stack is at least 64 bit
+  // aligned.
+  Ret += "-n32-S64";
+
+  return Ret;
+}
+
 // The Linux m68k target uses the ABI used
 // by Sun Microsystems for the old a.out-based binaries: 16-bit
 // alignment of int/long/pointer.
@@ -117,7 +141,6 @@ static std::string computeLoongArchDataLayout(const Triple &TT) {
 // For now we just fix this for NetBSD/m68k.
 //
 // Ref. https://github.com/llvm/llvm-project/issues/199826
-
 static std::string computeM68kDataLayout(const Triple &TT) {
   // FIXME how to wire it with the used object format?
   // FIXME no floats at the moment
@@ -485,6 +508,9 @@ std::string Triple::computeDataLayout(StringRef ABIName) const {
   case Triple::bpfel:
   case Triple::bpfeb:
     return computeBPFDataLayout(*this);
+  case Triple::cpu0:
+  case Triple::cpu0el:
+    return computeCpu0DataLayout(*this);
   case Triple::csky:
     return computeCSKYDataLayout(*this);
   case Triple::dxil:
